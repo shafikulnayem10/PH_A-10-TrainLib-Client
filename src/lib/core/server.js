@@ -1,16 +1,30 @@
 import { redirect } from "next/navigation";
-import { getUserToken } from "./session";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 export const authHeader = async () => {
-    const token = await getUserToken();
-    return token ? { authorization: `Bearer ${token}` } : {};
+   
+    if (typeof window !== "undefined") {
+        return {};
+    }
+
+    try {
+      
+        const { getUserToken } = await import("./session");
+        const token = await getUserToken();
+        return token ? { authorization: `Bearer ${token}` } : {};
+    } catch (error) {
+        console.error("Error reading token on server:", error);
+        return {};
+    }
 };
 
 
 export const serverFetch = async (path) => {
-    const res = await fetch(`${serverUrl}${path}`);
+   
+    const res = await fetch(`${serverUrl}${path}`, {
+        cache: 'no-store' 
+    });
     return handleStatusCode(res);
 };
 
@@ -32,7 +46,6 @@ export const serverMutation = async (path, data, method = 'POST') => {
     });
     return handleStatusCode(res);
 };
-
 
 const handleStatusCode = async (res) => {
     if (res.status === 401) {
