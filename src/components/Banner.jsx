@@ -42,8 +42,8 @@ export default function Banner() {
         }}
       />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
+     
+      <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[1.5px]" />
 
       {/* Glow Effect */}
       <div className="absolute left-1/2 top-[20%] h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-[130px]" />
@@ -81,7 +81,7 @@ export default function Banner() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-base sm:text-lg font-medium text-slate-300 max-w-2xl leading-relaxed drop-shadow"
+            className="text-base sm:text-lg font-medium text-slate-200 max-w-2xl leading-relaxed drop-shadow"
           >
             Join TrainLib to experience premium fitness classes, connect with world-class certified trainers, and reach your health goals alongside an unstoppable community.
           </motion.p>
@@ -137,7 +137,7 @@ export default function Banner() {
                 <div className="p-2 rounded-xl bg-white/[0.02] border border-white/5 group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-colors duration-300">
                   {feature.icon}
                 </div>
-                <span className="text-xs font-bold text-slate-300 transition-colors duration-300 group-hover:text-white">
+                <span className="text-xs font-bold text-slate-200 transition-colors duration-300 group-hover:text-white">
                   {feature.label}
                 </span>
               </motion.div>
