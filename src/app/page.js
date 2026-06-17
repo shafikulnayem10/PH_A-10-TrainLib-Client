@@ -1,14 +1,21 @@
-import Image from "next/image";
-import { Button } from "@heroui/react";
-import Banner from "@/components/Banner"; 
+import Banner from "@/components/Banner";
 import FeaturedClasses from "@/components/FeaturedClasses";
+import LatestPosts from "@/components/LatestPosts";
 
-export default function Homepage() {
-  return (
-    <>
-      <Banner />
-    
-      <FeaturedClasses /> 
-    </>
-  );
+export default function HomePage() {
+    return (
+        <main >
+            {/* Banner Section */}
+          <Banner/>
+
+            {/* Dynamic Section 1: Top Booked Classes */}
+            <FeaturedClasses />
+
+            {/* Dynamic Section 2: Latest Forum Posts  */}
+            <LatestPosts />
+
+            {/* Custom Static Sections */}
+
+        </main>
+    );
 }
