@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
-import { Dumbbell } from "lucide-react";
 import Image from "next/image";
+
+import logoImg from "../../../public/images/trainliblogo.jpg"; 
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,12 +52,20 @@ export default function Navbar() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* LOGO & BRAND */}
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 shadow-md shadow-blue-600/20">
-            <Dumbbell className="h-5 w-5 text-white" />
+        <Link href="/" className="flex items-center gap-3 group">
+          {/* Enhanced Logo Container */}
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/60 bg-white shadow-sm transition-transform duration-200 group-hover:scale-105 overflow-hidden">
+            <Image
+              src={logoImg}
+              alt="TrainLib Logo"
+              fill
+              sizes="44px"
+              className="object-cover"
+              priority
+            />
           </div>
           <div className="leading-none sm:block">
-            <h1 className="text-xl font-extrabold text-slate-900">
+            <h1 className="text-xl font-black text-slate-950 tracking-tight transition-colors duration-200 group-hover:text-blue-600">
               Train<span className="text-blue-600">Lib</span>
             </h1>
           </div>
@@ -66,12 +75,12 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-6 md:flex">
             {/* Nav Links */}
-            <ul className="flex items-center gap-1 rounded-full border border-slate-100 bg-slate-50 px-3 py-1.5">
+            <ul className="flex items-center gap-1 rounded-full border border-slate-100 bg-slate-100 px-3 py-1.5">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-blue-50 hover:text-blue-600"
+                    className="rounded-full px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-blue-50 hover:text-blue-600"
                   >
                     {link.label}
                   </Link>
