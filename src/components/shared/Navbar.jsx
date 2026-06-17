@@ -18,7 +18,6 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
- 
   const navLinks = [
     {
       label: "Home",
@@ -34,14 +33,12 @@ export default function Navbar() {
     },
   ];
 
- 
   const dashboardLinks = {
     user: "/dashboard/user",
     trainer: "/dashboard/trainer",
     admin: "/dashboard/admin",
   };
 
-  
   if (user?.email) {
     navLinks.push({
       label: "Dashboard",
@@ -89,7 +86,6 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-3">
-                
                   <Image
                     src={user?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100"}
                     alt="User avatar"
@@ -116,14 +112,16 @@ export default function Navbar() {
                   >
                     Login
                   </Link>
-                  <Button
-                    as={Link}
-                    href="/register"
-                    radius="xl"
-                    className="h-11 bg-blue-600 px-6 text-sm font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/10"
-                  >
-                    Register
-                  </Button>
+                  
+                  {/* Desktop Register Button */}
+                  <Link href="/register">
+                    <Button
+                      radius="xl"
+                      className="h-11 bg-blue-600 px-6 text-sm font-bold text-white hover:bg-blue-700 shadow-md shadow-blue-600/10"
+                    >
+                      Register
+                    </Button>
+                  </Link>
                 </>
               )}
             </div>
@@ -202,15 +200,16 @@ export default function Navbar() {
                     >
                       Login
                     </Link>
-                    <Button
-                      as={Link}
-                      href="/register"
-                      className="bg-blue-600 font-bold text-white shadow-md shadow-blue-600/10 py-5"
-                      radius="xl"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Register
-                    </Button>
+
+                    {/* Mobile Responsive Register Button */}
+                    <Link href="/register" onClick={() => setIsMenuOpen(false)}>
+                      <Button
+                        className="w-full bg-blue-600 font-bold text-white shadow-md shadow-blue-600/10 py-5"
+                        radius="xl"
+                      >
+                        Register
+                      </Button>
+                    </Link>
                   </>
                 )}
               </div>

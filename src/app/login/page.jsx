@@ -35,7 +35,6 @@ export default function LoginPage() {
     } else {
       toast.success("Welcome back!");
       
-   
       router.push("/"); 
       router.refresh();
     }
@@ -53,7 +52,6 @@ export default function LoginPage() {
     }
   };
 
-  
   const uiInputStyles = {
     input: "text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium",
     inputWrapper: [
@@ -74,9 +72,10 @@ export default function LoginPage() {
         
         {/* Title */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            WEL<span className="text-blue-600">COME</span>
-          </h1>
+        
+         <h1 className="text-3xl font-black !text-slate-900 dark:!text-white tracking-tight">
+  WEL<span className="text-blue-600">COME</span>
+</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
             Please enter your details to login to TrainLib.
           </p>
