@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import FeaturedClasses from "@/components/FeaturedClasses";
+import FeaturesSection from "@/components/FeaturesSection";
 import LatestPosts from "@/components/LatestPosts";
 
 export default function HomePage() {
@@ -15,6 +16,7 @@ export default function HomePage() {
             <LatestPosts />
 
             {/* Custom Static Sections */}
+            <FeaturesSection/>
 
         </main>
     );
