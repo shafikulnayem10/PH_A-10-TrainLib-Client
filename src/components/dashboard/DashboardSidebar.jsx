@@ -38,7 +38,7 @@ export async function DashboardSidebar() {
         { icon: GraduationCap, href: "/dashboard/admin/trainer-applications",   label: "Trainer Applications" },
         { icon: UserCog,       href: "/dashboard/admin/trainers",               label: "Manage Trainers" },
         { icon: Briefcase,     href: "/dashboard/admin/classes",                label: "Manage Classes" },
-        { icon: Star,          href: "/dashboard/admin/transactions",           label: "Transactions" }, // CreditCard এর বদলে Star বা Lucide আইকন
+        { icon: Star,          href: "/dashboard/admin/transactions",           label: "Transactions" }, 
         { icon: Bell,          href: "/dashboard/admin/add-forum-post",         label: "Add Forum Post" },
         { icon: ShieldAlert,   href: "/dashboard/admin/manage-forum",           label: "Manage Forum" },
         { icon: Gear,          href: "/dashboard/admin/settings",               label: "Settings" },
