@@ -2,7 +2,6 @@ import { stripe } from '@/lib/stripe';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { CircleCheckFill, Envelope, ArrowLeft } from '@gravity-ui/icons';
-
 import { createClassBooking } from '@/lib/api/classes'; 
 
 export default async function Success({ searchParams }) {
@@ -12,7 +11,6 @@ export default async function Success({ searchParams }) {
         throw new Error('Please provide a valid session_id (`cs_test_...`)');
     }
 
-  
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
     if (session.status === 'open') {
@@ -20,7 +18,6 @@ export default async function Success({ searchParams }) {
     }
 
     if (session.status === 'complete') {
-       
         const bookingData = {
             classId: classId,
             userEmail: session.customer_details?.email,
@@ -30,7 +27,9 @@ export default async function Success({ searchParams }) {
             transactionId: session.id,
         };
 
-    
+        const userRole = session.metadata?.role || 'user';
+        const dashboardLink = `/dashboard/${userRole}`;
+
         let backendResponse = null;
         try {
             backendResponse = await createClassBooking(bookingData);
@@ -67,10 +66,10 @@ export default async function Success({ searchParams }) {
 
                     <div className="space-y-3">
                         <Link
-                            href="/dashboard"
-                            className="block w-full text-center text-xs font-semibold px-4 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-950/30 transition duration-200"
+                            href={dashboardLink}
+                            className="block w-full text-center text-xs font-semibold px-4 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-950/30 transition duration-200 capitalize"
                         >
-                            Go to Dashboard Workspace
+                            Go to {userRole} Workspace
                         </Link>
 
                         <Link

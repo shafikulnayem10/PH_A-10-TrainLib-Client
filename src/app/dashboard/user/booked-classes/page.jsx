@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { getUserBookedClasses } from '@/lib/api/dashboard/user/user';
 import { getUserToken } from '@/lib/core/session';
 
@@ -7,15 +8,15 @@ export default async function BookedClassesPage() {
     let bookedClasses = [];
     let errorMessage = null;
 
+    const token = await getUserToken();
+    
+    if (!token) {
+        redirect('/login'); 
+    }
+
     try {
-        const token = await getUserToken();
-        
-        if (!token) {
-            errorMessage = "You are not authenticated. Please log in.";
-        } else {
-            const response = await getUserBookedClasses();
-            bookedClasses = response?.data || [];
-        }
+        const response = await getUserBookedClasses();
+        bookedClasses = response?.data || [];
     } catch (error) {
         errorMessage = error.message || "Something went wrong while loading classes.";
     }
@@ -37,7 +38,7 @@ export default async function BookedClassesPage() {
                 </div>
             )}
 
-            {!errorMessage && bookedClasses.length === 0 ? (
+            {bookedClasses.length === 0 ? (
                 <div className="text-center py-16 bg-blue-50/20 rounded-3xl border border-slate-100 p-8 shadow-inner-sm max-w-lg mx-auto">
                     <div className="relative w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-100/50 rounded-full text-blue-600">
                         <svg 
@@ -50,10 +51,6 @@ export default async function BookedClassesPage() {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                         </svg>
-                        <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-600"></span>
-                        </span>
                     </div>
                     
                     <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">No Classes Booked Yet</h3>
@@ -63,19 +60,9 @@ export default async function BookedClassesPage() {
                     
                     <Link 
                         href="/classes" 
-                        className="inline-flex items-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm mt-8 px-8 py-3 rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 transition-all duration-300 group border-none"
+                        className="inline-flex items-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm mt-8 px-8 py-3 rounded-2xl border-none"
                     >
                         Explore Classes
-                        <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            strokeWidth={2.5} 
-                            stroke="currentColor" 
-                            className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform duration-300"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-75 7.5M21 12H3" />
-                        </svg>
                     </Link>
                 </div>
             ) : (
