@@ -23,3 +23,7 @@ export const addClassToFavorites = async (favoriteData) => {
 export const checkClassFavoriteStatus = async (classId, userEmail) => {
   return protectedFetch(`/api/favorites/check?classId=${classId}&email=${encodeURIComponent(userEmail)}`);
 };
+
+export const createClassBooking = async (bookingData) => {
+  return serverMutation("/api/bookings", bookingData, "POST");
+};
