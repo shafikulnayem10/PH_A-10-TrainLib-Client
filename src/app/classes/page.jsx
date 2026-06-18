@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Filter, Clock, ArrowRight, ChevronDown } from "lucide-react";
+import { Search, Clock, ArrowRight, ChevronDown } from "lucide-react";
 import { Button, TextField, InputGroup, Select, ListBox, Pagination } from "@heroui/react";
 import Link from "next/link";
 import { serverFetch } from "@/lib/core/server";
 
 export default function AllClassesPage({ searchParams }) {
   const router = useRouter();
-  
+
   const resolvedSearchParams = use(searchParams);
   const initialSearch = resolvedSearchParams?.search || "";
   const initialCategory = resolvedSearchParams?.category || "All";
@@ -37,11 +37,15 @@ export default function AllClassesPage({ searchParams }) {
     const path = `?${sp.toString()}`;
     router.push(path);
 
+    let isCancelled = false;
+
     const fetchClassesData = async () => {
       try {
         const queryPath = `/all-classes?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}&page=${page}&perPage=${itemsPerPage}`;
         const data = await serverFetch(queryPath);
-        
+
+        if (isCancelled) return;
+
         if (data && data.classes) {
           setClasses(data.classes);
           setTotal(data.total || 0);
@@ -50,6 +54,7 @@ export default function AllClassesPage({ searchParams }) {
           setTotal(data.length);
         }
       } catch (error) {
+        if (isCancelled) return;
         console.error("Error connecting via serverFetch:", error);
         setClasses([]);
         setTotal(0);
@@ -60,30 +65,48 @@ export default function AllClassesPage({ searchParams }) {
       fetchClassesData();
     }, 300);
 
-    return () => clearTimeout(delayDebounceFn);
+    return () => {
+      isCancelled = true;
+      clearTimeout(delayDebounceFn);
+    };
   }, [router, search, category, page]);
 
- 
-const handleCategorySelection = (keys) => {
+  const handleCategorySelection = (keys) => {
     let selectedValue;
-   // console.log(typeof keys, keys);
 
     if (typeof keys === "string") {
       selectedValue = keys;
     } else if (keys instanceof Set || Array.isArray(keys)) {
-      selectedValue = Array.from(keys)[0];
+      selectedValue = Array.from(keys);
     } else {
       selectedValue = "All";
     }
 
     setCategory(selectedValue || "All");
     setPage(1);
-};
+  };
+
+  const getPageNumbers = (current, totalP) => {
+    const delta = 1;
+    const range = [];
+
+    for (let i = Math.max(2, current - delta); i <= Math.min(totalP - 1, current + delta); i++) {
+      range.push(i);
+    }
+
+    if (current - delta > 2) range.unshift("ellipsis-start");
+    if (current + delta < totalP - 1) range.push("ellipsis-end");
+
+    range.unshift(1);
+    if (totalP > 1) range.push(totalP);
+
+    return range;
+  };
 
   return (
     <main className="min-h-screen bg-slate-50/50 dark:bg-slate-950 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <div className="text-center mb-12">
           <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white uppercase sm:text-4xl">
             All Available Classes
@@ -94,11 +117,10 @@ const handleCategorySelection = (keys) => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-6 items-end justify-between mb-10 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm">
-          
-          {/* ১. TextField এবং InputGroup দিয়ে তৈরি সার্চ ফিল্ড */}
+
           <div className="w-full md:max-w-md">
-            <TextField 
-              value={search} 
+            <TextField
+              value={search}
               onChange={(value) => {
                 setSearch(value);
                 setPage(1);
@@ -110,21 +132,20 @@ const handleCategorySelection = (keys) => {
                 <InputGroup.Prefix className="pl-3 text-slate-400">
                   <Search className="w-4 h-4" />
                 </InputGroup.Prefix>
-                <InputGroup.Input 
-                  placeholder="Search fitness classes by name..." 
+                <InputGroup.Input
+                  placeholder="Search fitness classes by name..."
                   className="bg-transparent text-slate-900 dark:text-white placeholder-slate-400 text-sm py-2.5 px-3 outline-none w-full"
                 />
               </InputGroup>
             </TextField>
           </div>
-          
-          {/* ২. Select, Trigger, Popover এবং ListBox ট্যাগ দিয়ে ক্যাটাগরি ফিল্টার */}
+
           <div className="w-full md:w-64 flex flex-col gap-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Filter Category
             </span>
-            <Select 
-              selectedKeys={new Set([category])} 
+            <Select
+              selectedKeys={new Set([category])}
               onSelectionChange={handleCategorySelection}
               disallowEmptySelection
             >
@@ -136,16 +157,16 @@ const handleCategorySelection = (keys) => {
                   <ChevronDown className="w-4 h-4 text-slate-400" />
                 </Select.Indicator>
               </Select.Trigger>
-              
+
               <Select.Popover className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl mt-1 overflow-hidden z-50">
                 <ListBox className="p-1">
                   {categories.map((cat) => (
-                    <ListBox.Item 
-                      key={cat} 
+                    <ListBox.Item
+                      key={cat}
                       id={cat}
                       className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm cursor-pointer capitalize ${
-                        category === cat 
-                          ? "bg-blue-600 text-white font-bold" 
+                        category === cat
+                          ? "bg-blue-600 text-white font-bold"
                           : "text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                       }`}
                     >
@@ -227,15 +248,50 @@ const handleCategorySelection = (keys) => {
 
             {totalPages > 1 && (
               <div className="w-full flex flex-col items-center justify-center gap-2 mt-8">
-                <p className="text-xs text-slate-500">
-                  Showing {startItem}-{endItem} of {total} results
-                </p>
-                <Pagination
-                  total={totalPages}
-                  initialPage={1}
-                  page={page}
-                  onChange={(p) => setPage(p)}
-                />
+                <Pagination>
+                  <Pagination.Summary className="text-xs text-slate-500">
+                    Showing {startItem}-{endItem} of {total} results
+                  </Pagination.Summary>
+
+                  <Pagination.Content>
+                    <Pagination.Item>
+                      <Pagination.Previous
+                        isDisabled={page === 1}
+                        onPress={() => setPage((p) => Math.max(1, p - 1))}
+                      >
+                        <Pagination.PreviousIcon />
+                        <span>Previous</span>
+                      </Pagination.Previous>
+                    </Pagination.Item>
+
+                    {getPageNumbers(page, totalPages).map((p, idx) =>
+                      p === "ellipsis-start" || p === "ellipsis-end" ? (
+                        <Pagination.Item key={`${p}-${idx}`}>
+                          <Pagination.Ellipsis />
+                        </Pagination.Item>
+                      ) : (
+                        <Pagination.Item key={p}>
+                          <Pagination.Link
+                            isActive={p === page}
+                            onPress={() => setPage(p)}
+                          >
+                            {p}
+                          </Pagination.Link>
+                        </Pagination.Item>
+                      )
+                    )}
+
+                    <Pagination.Item>
+                      <Pagination.Next
+                        isDisabled={page === totalPages}
+                        onPress={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      >
+                        <span>Next</span>
+                        <Pagination.NextIcon />
+                      </Pagination.Next>
+                    </Pagination.Item>
+                  </Pagination.Content>
+                </Pagination>
               </div>
             )}
           </>
