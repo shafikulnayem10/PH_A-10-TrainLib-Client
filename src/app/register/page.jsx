@@ -4,7 +4,6 @@ import { authClient } from "@/lib/auth-client";
 import {
   Button,
   Card,
-  Description,
   FieldError,
   Form,
   Input,
@@ -13,11 +12,13 @@ import {
 } from "@heroui/react";
 import { GrGoogle } from "react-icons/gr";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -30,14 +31,14 @@ export default function RegisterPage() {
       email,
       password,
       name,
-      callbackURL: "/",
+      callbackURL: redirectTo,
     });
 
     if (error) {
       toast.error(error.message || "Registration failed. Please try again.");
     } else {
       toast.success("Account created successfully!");
-      router.push("/");
+      router.push(redirectTo);
       router.refresh();
     }
   };
@@ -46,7 +47,7 @@ export default function RegisterPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: redirectTo,
       });
       toast.success("Welcome!");
     } catch (err) {
@@ -69,10 +70,8 @@ export default function RegisterPage() {
     <div className="flex justify-center items-center min-h-[85vh] bg-slate-50/50 dark:bg-slate-950 px-4 text-slate-900 dark:text-white transition-colors duration-300">
       <Toaster position="top-center" reverseOrder={false} />
 
-      {/* Register Card Container */}
       <Card className="border border-slate-100 dark:border-slate-800 shadow-xl w-full max-w-md py-10 px-8 flex flex-col gap-6 rounded-3xl bg-white dark:bg-slate-900 shadow-none">
         
-        {/* Title */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-black !text-slate-900 dark:!text-white tracking-tight">
             CRE<span className="text-blue-600">ATE</span>
@@ -82,25 +81,13 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Registration Form */}
         <Form className="flex flex-col gap-5" onSubmit={onSubmit}>
-          
-          {/* Name Input */}
-          <TextField
-            isRequired
-            name="name"
-            type="text"
-            className="w-full"
-          >
+          <TextField isRequired name="name" type="text" className="w-full">
             <Label className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-1 block">Full Name</Label>
-            <Input 
-              placeholder="John Doe" 
-              classNames={uiInputStyles}
-            />
+            <Input placeholder="John Doe" classNames={uiInputStyles} />
             <FieldError className="text-xs text-red-500 mt-1 font-semibold" />
           </TextField>
 
-          {/* Email Input */}
           <TextField
             isRequired
             name="email"
@@ -114,62 +101,42 @@ export default function RegisterPage() {
             }}
           >
             <Label className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-1 block">Email Address</Label>
-            <Input 
-              placeholder="name@example.com" 
-              classNames={uiInputStyles}
-            />
+            <Input placeholder="name@example.com" classNames={uiInputStyles} />
             <FieldError className="text-xs text-red-500 mt-1 font-semibold" />
           </TextField>
 
-          {/* Password Input */}
-          <TextField
-            isRequired
-            name="password"
-            type="password"
-            className="w-full"
-          >
+          <TextField isRequired name="password" type="password" className="w-full">
             <Label className="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-1 block">Password</Label>
-            <Input 
-              type="password"
-              placeholder="*********"
-              classNames={uiInputStyles}
-            />
-            <Description className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-1">
-              Must be at least 6 characters.
-            </Description>
+            <Input type="password" placeholder="*********" classNames={uiInputStyles} />
             <FieldError className="text-xs text-red-500 mt-1 font-semibold" />
           </TextField>
 
-          {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold h-12 rounded-xl shadow-md shadow-blue-600/10 transition-all duration-300 text-sm"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold h-12 rounded-xl shadow-md transition-all text-sm"
           >
             Create Account
           </Button>
         </Form>
 
-        {/* Divider Section */}
         <div className="flex items-center gap-4 py-1">
           <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
           <span className="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Or</span>
           <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
         </div>
 
-        {/* Social Authentication Button */}
         <Button
           onClick={handleGoogleSignUp}
           variant="bordered"
-          className="w-full border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 font-extrabold h-12 rounded-xl transition-all duration-300 text-sm"
+          className="w-full border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 font-extrabold h-12 rounded-xl transition-all text-sm"
         >
           <GrGoogle className="text-blue-600 dark:text-blue-400 text-lg" />
           Sign up with Google
         </Button>
 
-        {/* Footer Link */}
         <p className="text-center text-sm text-slate-600 dark:text-slate-400 font-medium">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 font-extrabold hover:text-blue-700 dark:hover:text-blue-400 hover:underline transition-colors">
+          <Link href={`/login?redirect=${encodeURIComponent(redirectTo)}`} className="text-blue-600 font-extrabold hover:text-blue-700 dark:hover:text-blue-400 hover:underline">
             Sign In
           </Link>
         </p>
