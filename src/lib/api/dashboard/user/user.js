@@ -17,6 +17,14 @@ export const getUserBookedClasses = async () => {
         throw error;
     }
 };
+export const getUserFavorites = async () => {
+    try {
+        const data = await protectedFetch("/api/user/favorites");
+        return data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 // export async function applyAsTrainer(formData) {
 //     try {

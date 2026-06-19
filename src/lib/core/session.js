@@ -25,8 +25,9 @@ export const getUserToken = async () => {
         return session?.session?.token || null;
     } else {
         const { authClient } = await import("../auth-client");
-        const session = authClient.getActions().getStore().get("session");
-        return session?.token || null;
+      
+        const sessionRes = await authClient.getSession();
+        return sessionRes?.data?.session?.token || null;
     }
 };
 
