@@ -161,7 +161,7 @@ export default function AddForumPostPage() {
 
             if (result?.success) {
                 toast.success("Forum post created successfully!");
-                router.push('/dashboard/trainer');
+                router.push('/dashboard/trainer/my-forum-posts');
             } else {
                 toast.error(result?.message || "Failed to create post");
             }

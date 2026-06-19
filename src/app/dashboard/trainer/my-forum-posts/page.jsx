@@ -113,13 +113,12 @@ export default function MyForumPostsPage() {
                     >
                         <RefreshCw className={`size-5 ${loading ? 'animate-spin' : ''}`} />
                     </Button>
-                    <Button 
-                        as={Link} 
-                        href="/dashboard/trainer/add-forum-post" 
-                        className="bg-blue-600 text-white font-semibold hover:bg-blue-700 rounded-lg px-5 h-11 transition-all shadow-md flex items-center gap-2"
-                    >
-                        <Plus size={18} /> Create New Post
-                    </Button>
+                  <Link 
+    href="/dashboard/trainer/add-forum-post"
+    className="bg-blue-600 text-white font-semibold hover:bg-blue-700 rounded-lg px-5 h-11 transition-all shadow-md flex items-center gap-2 no-underline"
+>
+    <Plus size={18} /> Create New Post
+</Link>
                 </div>
             </div>
 
@@ -139,13 +138,12 @@ export default function MyForumPostsPage() {
                         <p className="text-blue-400 text-sm max-w-md">
                             You haven't created any forum posts yet. Start sharing your expertise with the community!
                         </p>
-                        <Button 
-                            as={Link} 
-                            href="/dashboard/trainer/add-forum-post" 
-                            className="bg-blue-50 text-blue-600 font-semibold rounded-lg px-6 mt-2"
-                        >
-                            Create Your First Post
-                        </Button>
+                      <Link 
+    href="/dashboard/trainer/add-forum-post"
+    className="bg-blue-50 text-blue-600 font-semibold rounded-lg px-6 mt-2 inline-flex items-center justify-center h-10 no-underline hover:bg-blue-100 transition"
+>
+    Create Your First Post
+</Link>
                     </div>
                 </Card>
             ) : (
