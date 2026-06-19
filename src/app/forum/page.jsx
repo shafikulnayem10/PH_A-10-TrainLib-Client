@@ -11,7 +11,6 @@ export default async function ForumPage() {
     let error = null;
 
     try {
-       
         posts = await getAllForumPosts();
     } catch (err) {
         console.error("Error loading forum posts:", err);
@@ -19,11 +18,9 @@ export default async function ForumPage() {
     }
 
     return (
-       
         <div className="w-full min-h-screen bg-white text-zinc-900 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
-                
-               
+                {/* Header */}
                 <div className="border-b border-zinc-200 pb-8 mb-10">
                     <span className="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">
                         Community Hub
@@ -36,21 +33,21 @@ export default async function ForumPage() {
                     </p>
                 </div>
 
-              
+                {/* Error State */}
                 {error && (
                     <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center text-red-600 text-sm">
                         {error}
                     </div>
                 )}
 
-              
+                {/* Empty State */}
                 {!error && posts.length === 0 && (
                     <div className="text-center py-20 bg-zinc-50 border border-zinc-100 rounded-2xl">
                         <p className="text-zinc-400 text-sm">No forum posts available at the moment.</p>
                     </div>
                 )}
 
-              
+                {/* Posts Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {posts.map((post) => (
                         <Card 
@@ -68,7 +65,7 @@ export default async function ForumPage() {
                                 </div>
                             )}
 
-                          
+                            {/* Post Content */}
                             <div className="p-5 flex flex-col flex-grow">
                                 <div className="flex items-center gap-4 text-zinc-400 text-[11px] font-medium mb-3">
                                     <span className="flex items-center gap-1">
@@ -91,14 +88,13 @@ export default async function ForumPage() {
                                     {post.title}
                                 </h2>
 
-                               
                                 <p className="text-zinc-600 text-xs leading-relaxed line-clamp-3 mb-6 flex-grow">
                                     {post.description}
                                 </p>
 
-                             
+                                {/* Read More Button */}
                                 <div className="pt-4 border-t border-zinc-100 mt-auto">
-                                    <Link href={`/forum/${post._id}`} passHref legacyBehavior>
+                                    <Link href={`/forum/${post._id}`}>
                                         <Button 
                                             className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold h-10 rounded-xl flex items-center justify-center gap-2 shadow-sm shadow-blue-200 transition duration-200"
                                         >
@@ -111,7 +107,6 @@ export default async function ForumPage() {
                         </Card>
                     ))}
                 </div>
-
             </div>
         </div>
     );

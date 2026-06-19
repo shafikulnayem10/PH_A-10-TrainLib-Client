@@ -18,12 +18,21 @@ export async function applyAsTrainerAction(formData) {
     }
 }
 
-
 export async function addClassAction(classData) {
     try {
         return await serverMutation("/api/trainer/add-class", classData, "POST");
     } catch (error) {
         console.error("Add class action error:", error);
         return { success: false, message: 'Failed to publish class.' };
+    }
+}
+
+// Forum Post Server Action
+export async function createForumPostAction(postData) {
+    try {
+        return await serverMutation("/api/trainer/forum/create", postData, "POST");
+    } catch (error) {
+        console.error("Create forum post error:", error);
+        return { success: false, message: 'Failed to create forum post.' };
     }
 }

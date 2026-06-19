@@ -71,7 +71,7 @@ export default async function PostDetailsPage({ params }) {
                     <div className="flex items-center gap-4 text-zinc-400 text-xs font-medium mb-4">
                         <span className="flex items-center gap-1.5 text-zinc-700">
                             <User className="w-4 h-4 text-zinc-400" />
-                            {post.author || 'Verified Staff'}
+                            {post.authorName || 'Verified Staff'}
                         </span>
                         <span className="flex items-center gap-1.5">
                             <Calendar className="w-4 h-4 text-zinc-400" />
