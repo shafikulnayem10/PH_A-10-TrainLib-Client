@@ -35,10 +35,10 @@ export const requireRole = async (role) => {
     const user = await getUserSession();
     if (!user) {
         if (typeof window !== "undefined") {
-            window.location.href = '/auth/signin';
+            window.location.href = '/login';
             return new Promise(() => {});
         } else {
-            redirect('/auth/signin');
+            redirect('/login');
         }
     }
     if (user?.role !== role) {
