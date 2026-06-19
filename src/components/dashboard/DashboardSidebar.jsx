@@ -23,7 +23,7 @@ export async function DashboardSidebar() {
     const trainerNavLinks = [
         { icon: House,       href: "/dashboard/trainer",                label: "Overview" },
         { icon: FileText,    href: "/dashboard/trainer/add-class",      label: "Add New Class" }, 
-        { icon: Briefcase,   href: "/dashboard/trainer/manage-classes", label: "My Classes" },
+        { icon: Briefcase,   href: "/dashboard/trainer/my-classes", label: "My Classes" },
         { icon: Bell,        href: "/dashboard/trainer/add-forum-post", label: "Add Forum Post" },
         { icon: Comments,    href: "/dashboard/trainer/forum-posts",    label: "My Forum Posts" },
         { icon: Gear,        href: "/dashboard/trainer/settings",       label: "Settings" },
