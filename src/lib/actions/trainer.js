@@ -17,3 +17,13 @@ export async function applyAsTrainerAction(formData) {
         return { success: false, message: 'Failed to submit application.' };
     }
 }
+
+
+export async function addClassAction(classData) {
+    try {
+        return await serverMutation("/api/trainer/add-class", classData, "POST");
+    } catch (error) {
+        console.error("Add class action error:", error);
+        return { success: false, message: 'Failed to publish class.' };
+    }
+}
