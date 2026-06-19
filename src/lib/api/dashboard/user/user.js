@@ -1,5 +1,4 @@
-
-import { protectedFetch } from "@/lib/core/server";
+import { protectedFetch, serverMutation } from "@/lib/core/server";
 
 export const getUserOverview = async () => {
     try {
@@ -18,3 +17,21 @@ export const getUserBookedClasses = async () => {
         throw error;
     }
 };
+
+// export async function applyAsTrainer(formData) {
+//     try {
+//         const data = await serverMutation("/api/user/apply-trainer", formData, "POST");
+//         return data;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
+
+// export async function getTrainerApplicationStatus() {
+//     try {
+//         const data = await protectedFetch("/api/user/trainer-status");
+//         return data;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
