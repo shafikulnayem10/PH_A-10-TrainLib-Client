@@ -2,14 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { fetchTrainerStatusAction, applyAsTrainerAction } from '@/lib/actions/trainer';
+import { useSession } from '@/lib/hooks/useSession';
+import toast from 'react-hot-toast';
 
 export default function ApplyAsTrainerPage() {
+    const { data: session, loading: sessionLoading } = useSession();
     const [statusData, setStatusData] = useState({ status: 'Loading', feedback: null });
     const [experience, setExperience] = useState('');
     const [specialty, setSpecialty] = useState('Yoga');
     const [bio, setBio] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
+
+    const isBlocked = session?.user?.softBanned === true;
 
     useEffect(() => {
         fetchStatus();
@@ -26,6 +31,19 @@ export default function ApplyAsTrainerPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (isBlocked) {
+            toast.error('Action restricted by Admin. Your account has been blocked.', {
+                duration: 5000,
+                style: {
+                    background: '#fee2e2',
+                    color: '#991b1b',
+                    border: '1px solid #fecaca',
+                },
+            });
+            return;
+        }
+
         setLoading(true);
         setMessage({ text: '', type: '' });
 
@@ -38,17 +56,51 @@ export default function ApplyAsTrainerPage() {
         const data = await applyAsTrainerAction({ experience, specialty, bio });
         if (data && data.success) {
             setMessage({ text: data.message, type: 'success' });
-            fetchStatus(); 
+            fetchStatus();
         } else {
             setMessage({ text: data?.message || 'Something went wrong.', type: 'error' });
         }
         setLoading(false);
     };
 
-    if (statusData.status === 'Loading') {
+    if (sessionLoading || statusData.status === 'Loading') {
         return (
             <div className="flex justify-center items-center min-h-[60vh]">
-                <span className="loading loading-spinner loading-lg text-blue-600"></span>
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        );
+    }
+
+    if (isBlocked) {
+        return (
+            <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-8 text-slate-800 antialiased">
+                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-red-700 to-rose-800 p-6 md:p-10 shadow-xl shadow-red-100/50">
+                    <div className="relative z-10 max-w-xl text-white">
+                        <span className="inline-block bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+                            Account Restricted
+                        </span>
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white leading-tight">
+                            Access Denied
+                        </h1>
+                        <p className="text-sm md:text-base text-red-100/90 mt-3 font-medium leading-relaxed">
+                            Your account has been restricted by an administrator. You cannot apply to be a trainer.
+                        </p>
+                    </div>
+                    <div className="absolute top-0 right-0 -mt-6 -mr-6 w-40 h-40 bg-rose-400/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-red-500/30 rounded-full blur-2xl pointer-events-none"></div>
+                </div>
+                <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-8 text-center">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
+                            <span className="text-4xl">X</span>
+                        </div>
+                        <h2 className="text-2xl font-bold text-red-800">Account Restricted</h2>
+                        <p className="text-red-600 max-w-md">
+                            Your account has been restricted by an administrator. You cannot apply to be a trainer.
+                            If you believe this is an error, please contact support.
+                        </p>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -73,11 +125,6 @@ export default function ApplyAsTrainerPage() {
 
             {message.text && (
                 <div className={`alert ${message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'} rounded-2xl border p-4 text-sm font-bold shadow-sm transition-all duration-300 flex items-center gap-3`}>
-                    {message.type === 'success' ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    )}
                     <span>{message.text}</span>
                 </div>
             )}
@@ -142,6 +189,7 @@ export default function ApplyAsTrainerPage() {
                                     onChange={(e) => setExperience(e.target.value)}
                                     placeholder="e.g., 5" 
                                     className="input input-bordered w-full h-12 rounded-xl bg-slate-50/50 border-slate-200 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:outline-none text-sm transition-all font-medium"
+                                    disabled={isBlocked}
                                 />
                             </div>
 
@@ -151,6 +199,7 @@ export default function ApplyAsTrainerPage() {
                                     value={specialty}
                                     onChange={(e) => setSpecialty(e.target.value)}
                                     className="select select-bordered w-full h-12 rounded-xl bg-slate-50/50 border-slate-200 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:outline-none text-sm font-semibold transition-all"
+                                    disabled={isBlocked}
                                 >
                                     <option value="Yoga">Yoga</option>
                                     <option value="Weights">Weights & Strength</option>
@@ -169,20 +218,33 @@ export default function ApplyAsTrainerPage() {
                                 rows={5}
                                 placeholder="Tell us comprehensively about your fitness certifications, professional coaching style, background, or accomplishments..." 
                                 className="textarea textarea-bordered w-full rounded-xl bg-slate-50/50 border-slate-200 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:outline-none text-sm transition-all leading-relaxed font-medium"
+                                disabled={isBlocked}
                             />
                         </div>
 
                         <button 
                             type="submit" 
-                            disabled={loading}
-                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-sm tracking-wider uppercase shadow-md shadow-blue-200 rounded-xl transition-all duration-200 active:scale-[0.995] h-12 flex items-center justify-center disabled:opacity-70 disabled:pointer-events-none"
+                            disabled={loading || isBlocked}
+                            className={`w-full font-extrabold text-sm tracking-wider uppercase shadow-md rounded-xl transition-all duration-200 active:scale-[0.995] h-12 flex items-center justify-center disabled:opacity-70 disabled:pointer-events-none ${
+                                isBlocked 
+                                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                                    : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-200'
+                            }`}
                         >
                             {loading ? (
-                                <span className="loading loading-spinner loading-sm"></span>
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            ) : isBlocked ? (
+                                'Account Restricted'
                             ) : (
-                                <span>Submit Trainer Application</span>
+                                'Submit Trainer Application'
                             )}
                         </button>
+
+                        {isBlocked && (
+                            <p className="text-center text-sm text-red-500 font-medium">
+                                Action restricted by Admin. Your account has been blocked.
+                            </p>
+                        )}
                     </form>
                 </div>
             )}

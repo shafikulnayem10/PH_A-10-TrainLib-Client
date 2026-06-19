@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -6,8 +6,11 @@ import { Edit2, Trash2, Reply } from 'lucide-react';
 import { CircleInfo } from "@gravity-ui/icons";
 import { Button, Modal } from "@heroui/react";
 import { editComment, deleteComment, addCommentReply } from '@/lib/api/forum';
+import { useSession } from '@/lib/hooks/useSession';
+import toast from 'react-hot-toast';
 
 export default function CommentActions({ comment, currentUser }) {
+    const { data: session } = useSession();
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(comment.text);
     const [isReplying, setIsReplying] = useState(false);
@@ -17,8 +20,21 @@ export default function CommentActions({ comment, currentUser }) {
     const router = useRouter();
 
     const isOwnComment = currentUser?.email === comment.userEmail;
+    const isBlocked = session?.user?.softBanned === true;
 
     const handleEdit = async () => {
+        if (isBlocked) {
+            toast.error('Action restricted by Admin. Your account has been blocked.', {
+                duration: 5000,
+                style: {
+                    background: '#fee2e2',
+                    color: '#991b1b',
+                    border: '1px solid #fecaca',
+                },
+            });
+            return;
+        }
+
         if (!editText.trim()) return;
         setIsLoading(true);
         try {
@@ -38,6 +54,18 @@ export default function CommentActions({ comment, currentUser }) {
     };
 
     const handleDelete = async () => {
+        if (isBlocked) {
+            toast.error('Action restricted by Admin. Your account has been blocked.', {
+                duration: 5000,
+                style: {
+                    background: '#fee2e2',
+                    color: '#991b1b',
+                    border: '1px solid #fecaca',
+                },
+            });
+            return;
+        }
+
         setIsLoading(true);
         try {
             const res = await deleteComment(comment._id, {
@@ -54,39 +82,63 @@ export default function CommentActions({ comment, currentUser }) {
         }
     };
 
-   const handleReply = async () => {
-    if (!replyText.trim()) return;
-    setIsLoading(true);
-    try {
-      
-        const cleanCommentId = String(comment._id).trim();
-
-        const res = await addCommentReply(cleanCommentId, {
-            text: replyText.trim(),
-            userEmail: currentUser.email,
-            userName: currentUser.name,
-            userImage: currentUser.image || currentUser.avatar || currentUser.picture || null
-        });
-        
-        if (res.success) {
-            setReplyText('');
-            setIsReplying(false);
-            router.refresh();
+    const handleReply = async () => {
+        if (isBlocked) {
+            toast.error('Action restricted by Admin. Your account has been blocked.', {
+                duration: 5000,
+                style: {
+                    background: '#fee2e2',
+                    color: '#991b1b',
+                    border: '1px solid #fecaca',
+                },
+            });
+            return;
         }
-    } catch (error) {
-        console.error(error);
-    } finally {
-        setIsLoading(false);
-    }
-};
+
+        if (!replyText.trim()) return;
+        setIsLoading(true);
+        try {
+            const cleanCommentId = String(comment._id).trim();
+            const res = await addCommentReply(cleanCommentId, {
+                text: replyText.trim(),
+                userEmail: currentUser.email,
+                userName: currentUser.name,
+                userImage: currentUser.image || currentUser.avatar || currentUser.picture || null
+            });
+            
+            if (res.success) {
+                setReplyText('');
+                setIsReplying(false);
+                router.refresh();
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="pl-8 mt-1 space-y-3">
             <div className="flex items-center gap-4 text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
                 {currentUser && (
                     <button 
-                        onClick={() => setIsReplying(!isReplying)} 
-                        className="flex items-center gap-1 hover:text-blue-600 transition"
+                        onClick={() => {
+                            if (isBlocked) {
+                                toast.error('Action restricted by Admin. Your account has been blocked.', {
+                                    duration: 5000,
+                                    style: {
+                                        background: '#fee2e2',
+                                        color: '#991b1b',
+                                        border: '1px solid #fecaca',
+                                    },
+                                });
+                                return;
+                            }
+                            setIsReplying(!isReplying);
+                        }} 
+                        className={`flex items-center gap-1 hover:text-blue-600 transition ${isBlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={isBlocked}
                     >
                         <Reply className="w-3 h-3" /> Reply
                     </button>
@@ -94,14 +146,42 @@ export default function CommentActions({ comment, currentUser }) {
                 {isOwnComment && (
                     <>
                         <button 
-                            onClick={() => setIsEditing(!isEditing)} 
-                            className="flex items-center gap-1 hover:text-amber-600 transition"
+                            onClick={() => {
+                                if (isBlocked) {
+                                    toast.error('Action restricted by Admin. Your account has been blocked.', {
+                                        duration: 5000,
+                                        style: {
+                                            background: '#fee2e2',
+                                            color: '#991b1b',
+                                            border: '1px solid #fecaca',
+                                        },
+                                    });
+                                    return;
+                                }
+                                setIsEditing(!isEditing);
+                            }} 
+                            className={`flex items-center gap-1 hover:text-amber-600 transition ${isBlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isBlocked}
                         >
                             <Edit2 className="w-3 h-3" /> Edit
                         </button>
                         <button 
-                            onClick={() => setIsDeleteModalOpen(true)} 
-                            className="flex items-center gap-1 hover:text-red-600 transition"
+                            onClick={() => {
+                                if (isBlocked) {
+                                    toast.error('Action restricted by Admin. Your account has been blocked.', {
+                                        duration: 5000,
+                                        style: {
+                                            background: '#fee2e2',
+                                            color: '#991b1b',
+                                            border: '1px solid #fecaca',
+                                        },
+                                    });
+                                    return;
+                                }
+                                setIsDeleteModalOpen(true);
+                            }} 
+                            className={`flex items-center gap-1 hover:text-red-600 transition ${isBlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isBlocked}
                         >
                             <Trash2 className="w-3 h-3" /> Delete
                         </button>
@@ -116,11 +196,12 @@ export default function CommentActions({ comment, currentUser }) {
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
                         className="flex-1 px-3 py-1.5 text-xs bg-white text-zinc-900 border border-zinc-200 rounded-lg focus:outline-none focus:border-blue-500"
+                        disabled={isBlocked}
                     />
                     <button
                         onClick={handleEdit}
-                        disabled={isLoading}
-                        className="px-3 py-1.5 bg-blue-600 text-white font-semibold text-[10px] rounded-lg hover:bg-blue-700"
+                        disabled={isLoading || isBlocked}
+                        className="px-3 py-1.5 bg-blue-600 text-white font-semibold text-[10px] rounded-lg hover:bg-blue-700 disabled:opacity-50"
                     >
                         Save
                     </button>
@@ -135,11 +216,12 @@ export default function CommentActions({ comment, currentUser }) {
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         className="flex-1 px-3 py-1.5 text-xs bg-white text-zinc-900 border border-zinc-200 rounded-lg focus:outline-none focus:border-blue-500"
+                        disabled={isBlocked}
                     />
                     <button
                         onClick={handleReply}
-                        disabled={isLoading}
-                        className="px-3 py-1.5 bg-blue-600 text-white font-semibold text-[10px] rounded-lg hover:bg-blue-700"
+                        disabled={isLoading || isBlocked}
+                        className="px-3 py-1.5 bg-blue-600 text-white font-semibold text-[10px] rounded-lg hover:bg-blue-700 disabled:opacity-50"
                     >
                         Reply
                     </button>
@@ -172,7 +254,7 @@ export default function CommentActions({ comment, currentUser }) {
                                 <Button 
                                     className="bg-red-600 text-white hover:bg-red-700"
                                     onPress={handleDelete}
-                                    disabled={isLoading}
+                                    disabled={isLoading || isBlocked}
                                 >
                                     {isLoading ? "Deleting..." : "Delete"}
                                 </Button>

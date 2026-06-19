@@ -31,7 +31,7 @@ export async function DashboardSidebar() {
 
     const adminNavLinks = [
         { icon: House,         href: "/dashboard/admin",                        label: "Overview" },
-        { icon: Users,         href: "/dashboard/admin/users",                  label: "Manage Users" },
+        { icon: Users,         href: "/dashboard/admin/manage-users",                  label: "Manage Users" },
         { icon: GraduationCap, href: "/dashboard/admin/trainer-applications",   label: "Trainer Applications" },
         { icon: UserCog,       href: "/dashboard/admin/trainers",               label: "Manage Trainers" },
         { icon: Briefcase,     href: "/dashboard/admin/classes",                label: "Manage Classes" },

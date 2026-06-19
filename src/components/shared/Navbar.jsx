@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
@@ -10,12 +10,28 @@ import logoImg from "../../../public/images/trainliblogo.jpg";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { data: session } = authClient.useSession();
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getSession = async () => {
+      try {
+        const { data } = await authClient.getSession();
+        setSession(data);
+      } catch (error) {
+        console.error("Error fetching session:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getSession();
+  }, []);
 
   const user = session?.user;
 
   const handleSignOut = async () => {
     await authClient.signOut();
+    setSession(null);
     setIsMenuOpen(false);
   };
 
@@ -47,13 +63,38 @@ export default function Navbar() {
     });
   }
 
+  if (loading) {
+    return (
+      <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-md">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/60 bg-white shadow-sm transition-transform duration-200 group-hover:scale-105 overflow-hidden">
+              <Image
+                src={logoImg}
+                alt="TrainLib Logo"
+                fill
+                sizes="44px"
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="leading-none sm:block">
+              <h1 className="text-xl font-black text-slate-950 tracking-tight transition-colors duration-200 group-hover:text-blue-600">
+                Train<span className="text-blue-600">Lib</span>
+              </h1>
+            </div>
+          </Link>
+        </div>
+      </nav>
+    );
+  }
+
   return (
     <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* LOGO & BRAND */}
         <Link href="/" className="flex items-center gap-3 group">
-          {/* Enhanced Logo Container */}
           <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/60 bg-white shadow-sm transition-transform duration-200 group-hover:scale-105 overflow-hidden">
             <Image
               src={logoImg}
