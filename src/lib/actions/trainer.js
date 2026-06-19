@@ -27,12 +27,30 @@ export async function addClassAction(classData) {
     }
 }
 
-// Forum Post Server Action
+// Forum Post Server Actions
 export async function createForumPostAction(postData) {
     try {
         return await serverMutation("/api/trainer/forum/create", postData, "POST");
     } catch (error) {
         console.error("Create forum post error:", error);
         return { success: false, message: 'Failed to create forum post.' };
+    }
+}
+
+export async function fetchTrainerForumPostsAction() {
+    try {
+        return await protectedFetch("/api/trainer/forum/my-posts");
+    } catch (error) {
+        console.error("Fetch forum posts error:", error);
+        return { success: false, data: [], message: 'Failed to fetch forum posts.' };
+    }
+}
+
+export async function deleteForumPostAction(postId) {
+    try {
+        return await serverMutation(`/api/trainer/forum/${postId}`, {}, "DELETE");
+    } catch (error) {
+        console.error("Delete forum post error:", error);
+        return { success: false, message: 'Failed to delete forum post.' };
     }
 }
