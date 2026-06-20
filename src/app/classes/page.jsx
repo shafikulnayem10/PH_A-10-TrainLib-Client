@@ -224,7 +224,7 @@ export default function AllClassesPage({ searchParams }) {
 
                   <div className="px-5 pb-5 pt-3 border-t border-slate-50 dark:border-slate-800/40 flex items-center justify-between">
                     <div className="flex items-center gap-4 text-xs font-bold text-slate-700 dark:text-slate-300">
-                      <span className="text-blue-600 dark:text-blue-400 text-sm">${cls.price}</span>
+                      <span className="text-blue-600 dark:text-blue-400 text-sm">${cls?.price || "Free"}</span>
                       <div className="flex items-center gap-1 text-slate-400 font-normal text-[11px]">
                         <Clock className="w-3.5 h-3.5" />
                         <span>{cls.duration || '60 mins'}</span>

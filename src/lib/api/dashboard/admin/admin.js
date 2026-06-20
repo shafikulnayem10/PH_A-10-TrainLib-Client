@@ -31,3 +31,15 @@ export const getTrainers = async () => {
 export const demoteTrainer = async (userId) => {
     return await serverMutation(`/api/admin/trainers/${userId}/demote`, {}, 'PATCH');
 };
+
+export const getAdminClasses = async () => {
+    return await protectedFetch("/api/admin/classes");
+};
+
+export const updateClassStatus = async (classId, status) => {
+    return await serverMutation(`/api/admin/classes/${classId}/status`, { status }, 'PATCH');
+};
+
+export const deleteClass = async (classId) => {
+    return await serverMutation(`/api/admin/classes/${classId}`, {}, 'DELETE');
+};

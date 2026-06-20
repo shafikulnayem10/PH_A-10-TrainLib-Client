@@ -114,7 +114,7 @@ export default async function ClassDetailsPage({ params }) {
             <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm sticky top-6">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Standard Tuition Fee</span>
               <div className="text-4xl font-black text-slate-900 dark:text-white mb-6">
-                ${classData.price}
+                ${classData?.price || "Free"}
               </div>
 
               <ActionButtons 

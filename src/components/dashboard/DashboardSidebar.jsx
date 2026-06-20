@@ -34,7 +34,7 @@ export async function DashboardSidebar() {
         { icon: Users,         href: "/dashboard/admin/manage-users",                  label: "Manage Users" },
         { icon: GraduationCap, href: "/dashboard/admin/trainer-applications",   label: "Trainer Applications" },
         { icon: UserCog,       href: "/dashboard/admin/manage-trainers",               label: "Manage Trainers" },
-        { icon: Briefcase,     href: "/dashboard/admin/classes",                label: "Manage Classes" },
+        { icon: Briefcase,     href: "/dashboard/admin/manage-classes",                label: "Manage Classes" },
         { icon: Star,          href: "/dashboard/admin/transactions",           label: "Transactions" }, 
         { icon: Bell,          href: "/dashboard/admin/add-forum-post",         label: "Add Forum Post" },
         { icon: ShieldAlert,   href: "/dashboard/admin/manage-forum",           label: "Manage Forum" },

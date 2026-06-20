@@ -82,3 +82,30 @@ export async function demoteTrainerAction(userId) {
         return { success: false, message: 'Failed to demote trainer.' };
     }
 }
+
+export async function fetchAdminClassesAction() {
+    try {
+        return await protectedFetch("/api/admin/classes");
+    } catch (error) {
+        console.error("Fetch admin classes error:", error);
+        return { success: false, data: [], message: 'Failed to fetch classes.' };
+    }
+}
+
+export async function updateClassStatusAction(classId, status) {
+    try {
+        return await serverMutation(`/api/admin/classes/${classId}/status`, { status }, 'PATCH');
+    } catch (error) {
+        console.error("Update class status error:", error);
+        return { success: false, message: 'Failed to update class status.' };
+    }
+}
+
+export async function deleteClassAction(classId) {
+    try {
+        return await serverMutation(`/api/admin/classes/${classId}`, {}, 'DELETE');
+    } catch (error) {
+        console.error("Delete class error:", error);
+        return { success: false, message: 'Failed to delete class.' };
+    }
+}
