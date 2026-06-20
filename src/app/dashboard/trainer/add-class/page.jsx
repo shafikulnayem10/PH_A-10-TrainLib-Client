@@ -13,6 +13,7 @@ import { ImageUp, Loader2, BookOpen, Clock, DollarSign, Calendar, Plus, Target, 
 import { toast } from "react-hot-toast";
 import { getUserToken } from "@/lib/core/session"; 
 import { addClassAction } from "@/lib/actions/trainer";
+import { useRouter } from 'next/navigation';
 
 const inputClassNames = {
     inputWrapper: "bg-white border border-blue-200 hover:border-blue-400 focus-within:!border-blue-600 rounded-xl shadow-sm h-11 transition-all duration-200",
@@ -27,6 +28,7 @@ const textAreaClassNames = {
 };
 
 export default function AddClassPage() {
+    const router = useRouter();
     const [uploading, setUploading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
@@ -164,6 +166,7 @@ export default function AddClassPage() {
                     image: '' 
                 });
                 setErrors({});
+                router.push('/dashboard/trainer/my-classes');
             } else {
                 const errMsg = result?.message || result?.error || JSON.stringify(result) || "Failed to publish class.";
                 toast.error(errMsg);
