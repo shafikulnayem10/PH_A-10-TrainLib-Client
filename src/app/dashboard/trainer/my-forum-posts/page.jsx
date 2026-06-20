@@ -90,60 +90,62 @@ export default function MyForumPostsPage() {
 
     return (
         <div className="max-w-7xl mx-auto my-8 px-4">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-blue-100">
-                <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
-                        <MessageSquare className="size-6" />
+            {/* Header with Gradient */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 p-6 md:p-8 mb-8 shadow-xl shadow-blue-200/50">
+                <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20">
+                            <MessageSquare className="size-7 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-black text-white tracking-tight">My Forum Posts</h1>
+                            <p className="text-sm text-blue-100/90 font-medium">Manage and track your community contributions</p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-blue-950 tracking-tight">My Forum Posts</h1>
-                        <p className="text-blue-500 font-medium text-sm">
-                            Manage and track your community contributions
-                        </p>
+                    <div className="flex items-center gap-2">
+                        <Button 
+                            isIconOnly 
+                            variant="light" 
+                            onClick={fetchPosts} 
+                            className="text-white hover:bg-white/20"
+                            disabled={loading}
+                        >
+                            <RefreshCw className={`size-5 ${loading ? 'animate-spin' : ''}`} />
+                        </Button>
+                        <Link 
+                            href="/dashboard/trainer/add-forum-post"
+                            className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white font-semibold rounded-xl px-5 h-11 transition-all flex items-center gap-2 border border-white/20"
+                        >
+                            <Plus size={18} /> Create New Post
+                        </Link>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Button 
-                        isIconOnly 
-                        variant="light" 
-                        onClick={fetchPosts} 
-                        className="text-blue-600 hover:bg-blue-50"
-                        disabled={loading}
-                    >
-                        <RefreshCw className={`size-5 ${loading ? 'animate-spin' : ''}`} />
-                    </Button>
-                  <Link 
-    href="/dashboard/trainer/add-forum-post"
-    className="bg-blue-600 text-white font-semibold hover:bg-blue-700 rounded-lg px-5 h-11 transition-all shadow-md flex items-center gap-2 no-underline"
->
-    <Plus size={18} /> Create New Post
-</Link>
-                </div>
+                <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-sky-400/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500/30 rounded-full blur-2xl pointer-events-none"></div>
             </div>
 
             {/* Content */}
             {loading ? (
                 <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
                     <Spinner size="lg" color="primary" />
-                    <p className="text-blue-950/60 text-sm font-medium">Loading your posts...</p>
+                    <p className="text-blue-600 font-medium">Loading your posts...</p>
                 </div>
             ) : posts.length === 0 ? (
-                <Card className="border border-blue-100 shadow-sm rounded-2xl bg-white p-12 text-center">
+                <Card className="border border-blue-100 shadow-md rounded-3xl bg-white p-12 text-center">
                     <div className="flex flex-col items-center justify-center gap-4">
-                        <div className="p-4 bg-blue-50/50 rounded-full text-blue-400 border border-blue-100">
+                        <div className="p-4 bg-blue-50 rounded-full text-blue-400 border border-blue-100">
                             <MessageSquare className="size-12 stroke-[1.5]" />
                         </div>
                         <h2 className="text-lg font-bold text-blue-950">No forum posts yet</h2>
                         <p className="text-blue-400 text-sm max-w-md">
                             You haven't created any forum posts yet. Start sharing your expertise with the community!
                         </p>
-                      <Link 
-    href="/dashboard/trainer/add-forum-post"
-    className="bg-blue-50 text-blue-600 font-semibold rounded-lg px-6 mt-2 inline-flex items-center justify-center h-10 no-underline hover:bg-blue-100 transition"
->
-    Create Your First Post
-</Link>
+                        <Link 
+                            href="/dashboard/trainer/add-forum-post"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl px-6 inline-flex items-center justify-center h-10 no-underline transition shadow-lg shadow-blue-200/50"
+                        >
+                            <Plus className="size-4 mr-1" /> Create Your First Post
+                        </Link>
                     </div>
                 </Card>
             ) : (
@@ -151,7 +153,7 @@ export default function MyForumPostsPage() {
                     {posts.map((post) => (
                         <Card 
                             key={post._id} 
-                            className="bg-white border border-blue-100 rounded-2xl overflow-hidden flex flex-col h-full shadow-sm hover:shadow-md transition-all duration-200 hover:border-blue-200"
+                            className="bg-white border border-blue-100 rounded-2xl overflow-hidden flex flex-col h-full shadow-sm hover:shadow-lg hover:shadow-blue-100/50 hover:border-blue-200 transition-all duration-300"
                         >
                             {/* Post Image */}
                             {post.image && (
@@ -159,17 +161,18 @@ export default function MyForumPostsPage() {
                                     <img 
                                         src={post.image} 
                                         alt={post.title} 
-                                        className="w-full h-full object-cover transition duration-300 hover:scale-105"
+                                        className="w-full h-full object-cover transition duration-500 hover:scale-105"
                                         onError={(e) => {
                                             e.target.src = '/placeholder.jpg';
                                         }}
                                     />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-blue-950/10 via-transparent to-transparent" />
                                     {/* Likes Badge */}
                                     <div className="absolute top-3 right-3">
                                         <Chip 
                                             size="sm" 
                                             className="bg-white/90 backdrop-blur-sm text-blue-700 font-semibold border border-blue-200 shadow-sm flex items-center gap-1"
-                                            startContent={<Heart className="size-3 fill-red-500 text-red-500" />}
+                                            startContent={<Heart className="size-3 fill-rose-500 text-rose-500" />}
                                         >
                                             {post.likes?.length || 0}
                                         </Chip>
@@ -180,23 +183,23 @@ export default function MyForumPostsPage() {
                             {/* Post Content */}
                             <div className="p-5 flex flex-col flex-grow">
                                 {/* Meta Info */}
-                                <div className="flex items-center gap-4 text-blue-400 text-[11px] font-medium mb-3 flex-wrap">
-                                    <span className="flex items-center gap-1">
-                                        <User className="w-3.5 h-3.5" />
+                                <div className="flex items-center gap-3 text-blue-400 text-[11px] font-medium mb-3 flex-wrap">
+                                    <span className="flex items-center gap-1.5 bg-blue-50/50 px-2 py-0.5 rounded-full">
+                                        <User className="w-3 h-3 text-blue-500" />
                                         {post.authorName || 'Trainer'}
                                     </span>
-                                    <span className="flex items-center gap-1">
-                                        <Calendar className="w-3.5 h-3.5" />
+                                    <span className="flex items-center gap-1.5">
+                                        <Calendar className="w-3 h-3 text-blue-400" />
                                         {formatDate(post.createdAt)}
                                     </span>
-                                    <span className="flex items-center gap-1 text-blue-300">
-                                        <Clock className="w-3.5 h-3.5" />
+                                    <span className="flex items-center gap-1.5 text-blue-300">
+                                        <Clock className="w-3 h-3" />
                                         {formatTime(post.createdAt)}
                                     </span>
                                 </div>
 
                                 {/* Title */}
-                                <h2 className="text-lg font-bold text-blue-950 tracking-tight leading-snug line-clamp-2 mb-2">
+                                <h2 className="text-lg font-bold text-blue-950 tracking-tight leading-snug line-clamp-2 mb-2 hover:text-blue-600 transition-colors">
                                     {post.title}
                                 </h2>
 
@@ -206,18 +209,18 @@ export default function MyForumPostsPage() {
                                 </p>
 
                                 {/* Stats */}
-                                <div className="flex items-center gap-4 text-xs text-blue-400 font-medium mb-4 pt-3 border-t border-blue-50">
-                                    <span className="flex items-center gap-1">
-                                        <MessageCircle className="size-3.5" />
-                                        {post.comments?.length || 0} Comments
+                                <div className="flex items-center gap-4 text-xs font-medium mb-4 pt-3 border-t border-blue-50">
+                                    <span className="flex items-center gap-1.5 text-blue-400">
+                                        <MessageCircle className="size-3.5 text-blue-400" />
+                                        {post.comments?.length || 0}
                                     </span>
-                                    <span className="flex items-center gap-1">
-                                        <ThumbsUp className="size-3.5 text-green-500" />
-                                        {post.likes?.length || 0} Likes
+                                    <span className="flex items-center gap-1.5 text-emerald-600">
+                                        <ThumbsUp className="size-3.5" />
+                                        {post.likes?.length || 0}
                                     </span>
-                                    <span className="flex items-center gap-1">
-                                        <ThumbsDown className="size-3.5 text-red-500" />
-                                        {post.dislikes?.length || 0} Dislikes
+                                    <span className="flex items-center gap-1.5 text-rose-600">
+                                        <ThumbsDown className="size-3.5" />
+                                        {post.dislikes?.length || 0}
                                     </span>
                                 </div>
 
@@ -284,24 +287,26 @@ export default function MyForumPostsPage() {
                                     <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
                                         <Trash2 className="size-8 text-red-600" />
                                     </div>
-                                    <h3 className="text-lg font-bold text-blue-950">Are you sure?</h3>
-                                    <p className="text-blue-600 text-sm leading-relaxed">
+                                    <h3 className="text-lg font-bold text-slate-900">Are you sure?</h3>
+                                    <p className="text-slate-600 text-sm leading-relaxed">
                                         You are about to delete the post:
                                     </p>
-                                    <p className="text-blue-950 font-semibold text-sm bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 max-w-full break-words">
-                                        "{selectedPostTitle}"
-                                    </p>
-                                    <p className="text-red-500 text-xs font-medium mt-2 flex items-center gap-1">
-                                        <AlertTriangle className="size-3" />
-                                        This action is permanent and cannot be undone.
-                                    </p>
+                                    <div className="bg-red-50 border border-red-200 rounded-xl p-3 w-full">
+                                        <p className="font-semibold text-slate-900 text-sm line-clamp-2">
+                                            "{selectedPostTitle || 'Untitled Post'}"
+                                        </p>
+                                    </div>
+                                    <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-800 flex items-start gap-2 text-left w-full">
+                                        <AlertTriangle className="size-4 flex-shrink-0 mt-0.5" />
+                                        <span>This action is permanent and cannot be undone.</span>
+                                    </div>
                                 </div>
                             </Modal.Body>
                             <Modal.Footer className="border-t border-red-50 pt-4 flex gap-3">
                                 <Button 
                                     size="md" 
                                     variant="light" 
-                                    className="text-blue-950 font-bold rounded-xl flex-1 hover:bg-blue-50 transition" 
+                                    className="text-slate-700 font-bold rounded-xl flex-1 hover:bg-slate-50 transition" 
                                     onClick={() => setShowDeleteModal(false)}
                                     disabled={deleting}
                                     startContent={<X className="size-4" />}
@@ -311,7 +316,7 @@ export default function MyForumPostsPage() {
                                 <Button 
                                     size="md" 
                                     isLoading={deleting}
-                                    className="bg-red-600 text-white font-bold rounded-xl flex-1 hover:bg-red-700 transition shadow-lg shadow-red-200" 
+                                    className="bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl flex-1 shadow-lg shadow-red-200" 
                                     onClick={handleDeleteConfirm}
                                 >
                                     {deleting ? 'Deleting...' : 'Delete Permanently'}

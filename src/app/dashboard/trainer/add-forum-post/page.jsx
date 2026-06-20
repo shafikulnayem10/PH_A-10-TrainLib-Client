@@ -13,8 +13,8 @@ const inputClassNames = {
     inputWrapper: `
         bg-white
         border-2
-        border-blue-100
-        hover:border-blue-300
+        border-blue-200
+        hover:border-blue-400
         focus-within:!border-blue-600
         rounded-2xl
         shadow-sm
@@ -24,8 +24,8 @@ const inputClassNames = {
         max-w-full
     `,
     input: `
-        text-slate-800
-        placeholder:text-slate-400
+        text-blue-950
+        placeholder:text-blue-300
         w-full
     `,
     mainWrapper: "w-full max-w-full",
@@ -37,8 +37,8 @@ const textAreaClassNames = {
     inputWrapper: `
         bg-white
         border-2
-        border-blue-100
-        hover:border-blue-300
+        border-blue-200
+        hover:border-blue-400
         focus-within:!border-blue-600
         rounded-2xl
         shadow-sm
@@ -49,8 +49,8 @@ const textAreaClassNames = {
         min-h-[150px]
     `,
     input: `
-        text-slate-800
-        placeholder:text-slate-400
+        text-blue-950
+        placeholder:text-blue-300
         w-full
         min-h-[120px]
     `,
@@ -76,14 +76,12 @@ export default function AddForumPostPage() {
 
         const file = files[0];
 
-        // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             setImageError("File size exceeds 5MB limit");
             toast.error("File size exceeds 5MB limit");
             return;
         }
 
-        // Validate file type
         if (!['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'].includes(file.type)) {
             setImageError("Only PNG, JPG, WebP, and GIF files are allowed");
             toast.error("Only PNG, JPG, WebP, and GIF files are allowed");
@@ -138,7 +136,6 @@ export default function AddForumPostPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate form
         if (!formData.title.trim()) {
             toast.error("Please enter a post title");
             return;
@@ -175,28 +172,28 @@ export default function AddForumPostPage() {
 
     return (
         <div className="max-w-7xl mx-auto my-8 px-4">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-8 pb-4 border-b border-blue-100">
-                <Link href="/dashboard/trainer" className="p-2 hover:bg-blue-50 rounded-xl transition">
-                    <ArrowLeft className="size-5 text-blue-600" />
-                </Link>
-                <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
-                        <MessageSquare className="size-6" />
+            {/* Header with Gradient */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 p-6 md:p-8 mb-8 shadow-xl shadow-blue-200/50">
+                <div className="relative z-10 flex items-center gap-4">
+                    <div className="p-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20">
+                        <MessageSquare className="size-7 text-white" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-blue-950 tracking-tight">Add Forum Post</h1>
-                        <p className="text-blue-500 font-medium text-sm">Share your expertise with the community</p>
+                        <h1 className="text-2xl font-black text-white tracking-tight">Add Forum Post</h1>
+                        <p className="text-sm text-blue-100/90 font-medium">Share your expertise with the community</p>
                     </div>
                 </div>
+                <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-sky-400/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500/30 rounded-full blur-2xl pointer-events-none"></div>
             </div>
 
-            {/* Form Card - Increased width */}
-            <Card className="border border-blue-100 shadow-sm rounded-2xl bg-white p-8 max-w-full">
+            {/* Form Card */}
+            <Card className="border border-blue-100 shadow-xl shadow-blue-100/40 rounded-3xl bg-white p-8 max-w-full">
                 <form onSubmit={handleSubmit} className="space-y-6 w-full">
-                    {/* Title Input - Full width */}
+                    {/* Title Input */}
                     <div className="w-full">
-                        <label className="text-blue-800 font-semibold text-sm block mb-1.5">
+                        <label className="flex items-center gap-2 text-blue-800 font-bold text-sm mb-1.5">
+                            <MessageSquare className="size-4 text-blue-500" />
                             Post Title <span className="text-red-500">*</span>
                         </label>
                         <Input
@@ -204,7 +201,6 @@ export default function AddForumPostPage() {
                             value={formData.title}
                             onChange={e => setFormData({...formData, title: e.target.value})}
                             classNames={inputClassNames}
-                            startContent={<MessageSquare className="size-4 text-blue-400 mr-1 flex-shrink-0" />}
                             isRequired
                             size="lg"
                             fullWidth={true}
@@ -213,14 +209,14 @@ export default function AddForumPostPage() {
 
                     {/* Image Upload Section */}
                     <div className="w-full">
-                        <label className="text-blue-800 font-semibold text-sm block mb-1.5">
+                        <label className="flex items-center gap-2 text-blue-800 font-bold text-sm mb-1.5">
+                            <ImageUp className="size-4 text-blue-500" />
                             Post Image <span className="text-red-500">*</span>
                         </label>
                         
                         <div className="flex flex-col gap-4 w-full">
-                            {/* Upload Area */}
-                            <div className="flex items-center gap-5 p-6 border-2 border-dashed border-blue-300 bg-blue-50/40 rounded-xl transition-colors hover:bg-blue-50/60 w-full">
-                                <label className="w-24 h-24 border-2 border-dashed border-blue-300 hover:border-blue-500 bg-white rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors group relative overflow-hidden flex-shrink-0">
+                            <div className="flex items-center gap-5 p-6 border-2 border-dashed border-blue-300 bg-blue-50/40 rounded-2xl transition-colors hover:bg-blue-50/60">
+                                <label className="w-24 h-24 border-2 border-dashed border-blue-300 hover:border-blue-500 bg-white rounded-xl flex flex-col items-center justify-center cursor-pointer transition-colors group relative overflow-hidden shadow-sm">
                                     <input 
                                         type="file" 
                                         accept="image/png, image/jpeg, image/jpg, image/webp, image/gif" 
@@ -269,9 +265,8 @@ export default function AddForumPostPage() {
                                 </div>
                             </div>
 
-                            {/* Image Preview - Full Size */}
                             {imagePreview && !uploading && (
-                                <div className="relative w-full max-h-[500px] rounded-xl overflow-hidden border border-blue-100 bg-blue-50/30 p-2">
+                                <div className="relative w-full max-h-[500px] rounded-2xl overflow-hidden border border-blue-100 bg-blue-50/30 p-2">
                                     <img 
                                         src={imagePreview} 
                                         alt="Post image preview" 
@@ -286,9 +281,10 @@ export default function AddForumPostPage() {
                         </div>
                     </div>
 
-                    {/* Description TextArea - Full width */}
+                    {/* Description TextArea */}
                     <div className="w-full">
-                        <label className="text-blue-800 font-semibold text-sm block mb-1.5">
+                        <label className="flex items-center gap-2 text-blue-800 font-bold text-sm mb-1.5">
+                            <MessageSquare className="size-4 text-blue-500" />
                             Description <span className="text-red-500">*</span>
                         </label>
                         <TextArea
@@ -309,7 +305,7 @@ export default function AddForumPostPage() {
                         <Button
                             type="button"
                             onClick={() => router.push('/dashboard/trainer')}
-                            className="flex-1 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition h-12"
+                            className="flex-1 bg-blue-50 text-blue-600 font-semibold rounded-xl hover:bg-blue-100 transition h-12"
                             disabled={loading || uploading}
                         >
                             Cancel
@@ -318,7 +314,7 @@ export default function AddForumPostPage() {
                             type="submit"
                             isLoading={loading}
                             disabled={uploading || !formData.image}
-                            className="flex-[2] bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-200 h-12 flex items-center justify-center gap-2 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                            className="flex-[2] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-200/50 h-12 flex items-center justify-center gap-2 disabled:bg-blue-300 disabled:shadow-none"
                         >
                             <Send className="size-4" />
                             {loading ? 'Publishing...' : 'Publish Post'}
