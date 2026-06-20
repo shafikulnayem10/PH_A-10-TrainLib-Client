@@ -64,3 +64,21 @@ export async function updateTrainerApplicationAction(applicationId, status, feed
         return { success: false, message: 'Failed to update application.' };
     }
 }
+
+export async function fetchTrainersAction() {
+    try {
+        return await protectedFetch("/api/admin/trainers");
+    } catch (error) {
+        console.error("Fetch trainers error:", error);
+        return { success: false, data: [], message: 'Failed to fetch trainers.' };
+    }
+}
+
+export async function demoteTrainerAction(userId) {
+    try {
+        return await serverMutation(`/api/admin/trainers/${userId}/demote`, {}, 'PATCH');
+    } catch (error) {
+        console.error("Demote trainer error:", error);
+        return { success: false, message: 'Failed to demote trainer.' };
+    }
+}

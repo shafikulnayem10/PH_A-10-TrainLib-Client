@@ -23,3 +23,11 @@ export const getTrainerApplications = async () => {
 export const updateTrainerApplication = async (applicationId, data) => {
     return await serverMutation(`/api/admin/trainer-applications/${applicationId}`, data, 'PATCH');
 };
+
+export const getTrainers = async () => {
+    return await protectedFetch("/api/admin/trainers");
+};
+
+export const demoteTrainer = async (userId) => {
+    return await serverMutation(`/api/admin/trainers/${userId}/demote`, {}, 'PATCH');
+};

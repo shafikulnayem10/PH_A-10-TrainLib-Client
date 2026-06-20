@@ -33,7 +33,7 @@ export async function DashboardSidebar() {
         { icon: House,         href: "/dashboard/admin",                        label: "Overview" },
         { icon: Users,         href: "/dashboard/admin/manage-users",                  label: "Manage Users" },
         { icon: GraduationCap, href: "/dashboard/admin/trainer-applications",   label: "Trainer Applications" },
-        { icon: UserCog,       href: "/dashboard/admin/trainers",               label: "Manage Trainers" },
+        { icon: UserCog,       href: "/dashboard/admin/manage-trainers",               label: "Manage Trainers" },
         { icon: Briefcase,     href: "/dashboard/admin/classes",                label: "Manage Classes" },
         { icon: Star,          href: "/dashboard/admin/transactions",           label: "Transactions" }, 
         { icon: Bell,          href: "/dashboard/admin/add-forum-post",         label: "Add Forum Post" },
