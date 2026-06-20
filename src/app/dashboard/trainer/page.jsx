@@ -121,7 +121,7 @@ export default async function TrainerOverviewPage() {
                             <div className="avatar">
                                 <div className="w-24 rounded-2xl ring-4 ring-blue-500/10 ring-offset-2">
                                     <img 
-                                        src={profile?.image || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} 
+                                        src={profile?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100"} 
                                         alt={profile?.name || "Trainer Avatar"} 
                                         className="object-cover"
                                     />
