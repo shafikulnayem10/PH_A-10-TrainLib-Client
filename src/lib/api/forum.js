@@ -4,9 +4,8 @@ export const getLatestForumPosts = async () => {
     return serverFetch("/latest-posts");
 };
 
-export const getAllForumPosts = async (queryString = "") => {
-    const query = queryString ? `?${queryString}` : "";
-    return serverFetch(`/api/forum${query}`);
+export const getAllForumPosts = async (page = 1, perPage = 4) => {
+    return serverFetch(`/api/forum?page=${page}&perPage=${perPage}`);
 };
 
 export const getPostDetails = async (id) => {

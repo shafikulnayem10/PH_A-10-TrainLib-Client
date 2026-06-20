@@ -1,9 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { Home, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export default function RootError({ error, reset }) {
+    useEffect(() => {
+        console.error('Application error:', error);
+    }, [error]);
+
     const isRedirect = 
         error?.message?.includes('NEXT_REDIRECT') || 
         error?.digest?.includes('NEXT_REDIRECT');
@@ -13,47 +18,58 @@ export default function RootError({ error, reset }) {
     }
 
     return (
-        <div className="w-full min-h-screen bg-zinc-950 text-zinc-50 flex flex-col justify-center items-center p-6 select-none">
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-72 h-72 bg-red-500/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="w-full min-h-screen bg-white flex flex-col justify-center items-center p-6 select-none relative overflow-hidden">
+           
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-rose-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-amber-400/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-rose-300/5 rounded-full blur-[80px] pointer-events-none" />
 
-            <section className="relative max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-2xl text-center overflow-hidden">
-                <div className="w-16 h-16 bg-red-500/10 text-red-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/20">
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        strokeWidth={2} 
-                        stroke="currentColor" 
-                        className="w-8 h-8 text-red-500"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                    </svg>
+            <div className="relative flex flex-col items-center text-center max-w-md">
+                {/* Error Icon */}
+                <div className="relative mb-8">
+                    <div className="w-40 h-40 bg-gradient-to-br from-rose-50 to-rose-100 rounded-3xl flex items-center justify-center border border-rose-200 shadow-lg shadow-rose-100/50">
+                        <AlertTriangle className="w-20 h-20 text-rose-500" strokeWidth={1.5} />
+                    </div>
+                    <div className="absolute -top-3 -right-3 w-12 h-12 bg-rose-200/30 rounded-full blur-xl" />
+                    <div className="absolute -bottom-3 -left-3 w-16 h-16 bg-rose-300/20 rounded-full blur-xl" />
                 </div>
 
-                <h1 className="text-2xl font-extrabold text-zinc-50 tracking-tight mb-2">
-                    Something Went Wrong!
+                {/* Error Message */}
+                <h1 className="text-3xl font-black text-rose-950 tracking-tight mb-2">
+                    Something Went Wrong
                 </h1>
-              
-                <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                    {error?.message || "An unexpected error occurred. Please try reloading the page or go back to the homepage."}
+                <p className="text-rose-500 text-base font-medium mb-2">
+                    {error?.message || 'An unexpected error occurred.'}
+                </p>
+                <p className="text-rose-400 text-sm mb-8">
+                    Please try again or contact support if the issue persists.
                 </p>
 
-                <div className="space-y-3">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 w-full">
                     <button
-                        onClick={() => reset()}
-                        className="block w-full text-center text-xs font-semibold px-4 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl shadow-lg shadow-red-950/30 transition duration-200"
+                        onClick={reset}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md shadow-blue-200 flex items-center justify-center gap-2"
                     >
+                        <RefreshCw className="w-4 h-4" />
                         Try Again
                     </button>
-
-                    <Link
+                    <Link 
                         href="/"
-                        className="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200 py-1 transition"
+                        className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-3 px-6 rounded-xl transition-all border border-blue-200 flex items-center justify-center gap-2"
                     >
-                        Return to Homepage
+                        <Home className="w-4 h-4" />
+                        Go Home
                     </Link>
                 </div>
-            </section>
+
+                {/* Additional help */}
+                <div className="mt-8 pt-6 border-t border-rose-100 w-full">
+                    <p className="text-xs text-rose-400 font-medium">
+                        Error code: {error?.digest || 'Unknown'}
+                    </p>
+                </div>
+            </div>
         </div>
     );
 }

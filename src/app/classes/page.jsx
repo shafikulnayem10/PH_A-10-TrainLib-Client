@@ -3,7 +3,7 @@
 import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Clock, ArrowRight, ChevronDown } from "lucide-react";
-import { Button, TextField, InputGroup, Select, ListBox, Pagination } from "@heroui/react";
+import { Button, TextField, InputGroup, Select, ListBox, Pagination, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { serverFetch } from "@/lib/core/server";
 
@@ -17,12 +17,13 @@ export default function AllClassesPage({ searchParams }) {
 
   const [classes, setClasses] = useState([]);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(initialSearch);
   const [category, setCategory] = useState(initialCategory);
   const [page, setPage] = useState(initialPage);
 
   const categories = ["All", "CrossFit", "Yoga", "Strength", "Cardio", "Pilates"];
-  const itemsPerPage = 12;
+  const itemsPerPage = 4;
   const totalPages = Math.ceil(total / itemsPerPage);
 
   const startItem = total === 0 ? 0 : (page - 1) * itemsPerPage + 1;
@@ -40,6 +41,7 @@ export default function AllClassesPage({ searchParams }) {
     let isCancelled = false;
 
     const fetchClassesData = async () => {
+      setLoading(true);
       try {
         const queryPath = `/all-classes?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}&page=${page}&perPage=${itemsPerPage}`;
         const data = await serverFetch(queryPath);
@@ -58,6 +60,10 @@ export default function AllClassesPage({ searchParams }) {
         console.error("Error connecting via serverFetch:", error);
         setClasses([]);
         setTotal(0);
+      } finally {
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
@@ -179,16 +185,21 @@ export default function AllClassesPage({ searchParams }) {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto mb-6 text-sm text-slate-500">
-          Showing {classes.length} fitness program{classes.length !== 1 && "s"}
-        </div>
-
-        {classes.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Spinner size="lg" color="primary" />
+            <p className="mt-4 text-sm text-slate-500">Loading classes...</p>
+          </div>
+        ) : classes.length === 0 ? (
           <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
             <p className="text-slate-500 text-sm">No approved fitness programs found matching criteria.</p>
           </div>
         ) : (
           <>
+            <div className="max-w-7xl mx-auto mb-6 text-sm text-slate-500">
+              Showing {classes.length} fitness program{classes.length !== 1 && "s"}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
               {classes.map((cls) => (
                 <article

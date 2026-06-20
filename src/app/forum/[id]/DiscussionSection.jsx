@@ -101,11 +101,7 @@ export default function DiscussionSection({ postId, initialComments, currentUser
                             <div key={index} className="mt-3 ml-8 pl-4 border-l-2 border-blue-500 bg-zinc-50 p-3 rounded-r-lg">
                                 <div className="flex items-center justify-between mb-1">
                                     <div className="flex items-center gap-2">
-                                        <UserAvatar 
-                                            src={reply.userImage} 
-                                            alt={reply.userName} 
-                                            className="w-6 h-6 rounded-full relative" 
-                                        />
+                                       
                                         <div className="flex items-center gap-1.5">
                                             <span className="text-[11px] font-semibold text-blue-600">{reply.userName}</span>
                                             {getRoleBadge(reply.authorRole)}

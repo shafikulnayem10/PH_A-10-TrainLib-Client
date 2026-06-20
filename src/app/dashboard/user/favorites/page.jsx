@@ -44,7 +44,7 @@ export default async function FavoriteClassesPage() {
                     </div>
                     <p className="text-blue-950 text-lg font-bold">You haven't added any favorites yet.</p>
                     <p className="text-sm text-blue-800/50 mt-1 max-w-xs mx-auto font-medium">Discover top courses and start saving your preferred classes today.</p>
-                    <Link href="/all-classes" className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 px-5 rounded-xl mt-6 transition-colors shadow-sm shadow-blue-600/10">
+                    <Link href="/classes" className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 px-5 rounded-xl mt-6 transition-colors shadow-sm shadow-blue-600/10">
                         Browse Classes
                     </Link>
                 </div>
