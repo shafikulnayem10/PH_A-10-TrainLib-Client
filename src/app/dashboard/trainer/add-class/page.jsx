@@ -131,9 +131,7 @@ export default function AddClassPage() {
         setSubmitting(true);
 
         try {
-            
             const token = await getUserToken();
-            // console.log("TOKEN:", token); 
 
             if (!token) {
                 toast.error("Your session has expired. Please log in again.");
@@ -141,22 +139,15 @@ export default function AddClassPage() {
                 return;
             }
 
-          
             const submissionData = {
                 ...formData,
                 price: parseFloat(formData.price),
-              
                 objectives: formData.objectives,
                 requirements: formData.requirements,
                 status: "Pending"
             };
 
-            // console.log("SUBMISSION DATA:", submissionData); 
-
-            // ── Step 3: Action call ──
             const result = await addClassAction(submissionData);
-
-            // console.log("ACTION RESULT:", result);
 
             if (result?.success) {
                 toast.success("Class published successfully!");
@@ -174,7 +165,6 @@ export default function AddClassPage() {
                 });
                 setErrors({});
             } else {
-              
                 const errMsg = result?.message || result?.error || JSON.stringify(result) || "Failed to publish class.";
                 toast.error(errMsg);
             }
