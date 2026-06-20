@@ -103,7 +103,8 @@ export default function CommentActions({ comment, currentUser }) {
                 text: replyText.trim(),
                 userEmail: currentUser.email,
                 userName: currentUser.name,
-                userImage: currentUser.image || currentUser.avatar || currentUser.picture || null
+                userImage: currentUser.image || currentUser.avatar || currentUser.picture || null,
+                authorRole: currentUser.role || 'user'
             });
             
             if (res.success) {

@@ -43,3 +43,10 @@ export const updateClassStatus = async (classId, status) => {
 export const deleteClass = async (classId) => {
     return await serverMutation(`/api/admin/classes/${classId}`, {}, 'DELETE');
 };
+
+export const createAdminForumPost = async (postData) => {
+    return await serverMutation("/api/admin/forum/create", postData, "POST");
+};
+export const getTransactions = async () => {
+    return await protectedFetch("/api/admin/transactions");
+};

@@ -180,9 +180,12 @@ export default function MyClassesPage() {
                     <Button isIconOnly variant="light" onClick={fetchClasses} className="text-blue-600 hover:bg-blue-50">
                         <RefreshCw className="size-5" />
                     </Button>
-                    <Button as={Link} href="/dashboard/trainer/add-class" className="bg-blue-600 text-white font-semibold hover:bg-blue-700 rounded-lg px-5 h-11 transition-all shadow-md flex items-center gap-2">
-                        <Plus size={18} /> Add New Class
-                    </Button>
+                   <Link 
+    href="/dashboard/trainer/add-class"
+    className="bg-blue-600 text-white font-semibold hover:bg-blue-700 rounded-lg px-5 h-11 transition-all shadow-md flex items-center gap-2 no-underline inline-flex"
+>
+    <Plus size={18} /> Add New Class
+</Link>
                 </div>
             </div>
 
@@ -200,7 +203,12 @@ export default function MyClassesPage() {
                         <Card.Title className="text-lg font-bold text-blue-950">No classes found</Card.Title>
                     </Card.Header>
                     <Card.Footer className="justify-center">
-                        <Button as={Link} href="/dashboard/trainer/add-class" className="bg-blue-50 text-blue-600 font-semibold rounded-lg px-6">Create Class</Button>
+                       <Link 
+    href="/dashboard/trainer/add-class"
+    className="bg-blue-50 text-blue-600 font-semibold rounded-lg px-6 inline-flex items-center justify-center h-10 no-underline hover:bg-blue-100 transition"
+>
+    Create Class
+</Link>
                     </Card.Footer>
                 </Card>
             ) : (

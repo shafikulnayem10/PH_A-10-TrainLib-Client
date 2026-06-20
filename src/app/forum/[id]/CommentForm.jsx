@@ -41,7 +41,8 @@ export default function CommentForm({ postId, currentUser }) {
                 text: text.trim(),
                 userEmail: currentUser.email,
                 userImage: currentUser.image || null,
-                userName: currentUser.name || null
+                userName: currentUser.name || null,
+                authorRole: currentUser.role || 'user'
             });
             if (response.success) {
                 setText('');

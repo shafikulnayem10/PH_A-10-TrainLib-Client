@@ -109,3 +109,20 @@ export async function deleteClassAction(classId) {
         return { success: false, message: 'Failed to delete class.' };
     }
 }
+
+export async function createAdminForumPostAction(postData) {
+    try {
+        return await serverMutation("/api/admin/forum/create", postData, "POST");
+    } catch (error) {
+        console.error("Create admin forum post error:", error);
+        return { success: false, message: 'Failed to create forum post.' };
+    }
+}
+export async function fetchTransactionsAction() {
+    try {
+        return await protectedFetch("/api/admin/transactions");
+    } catch (error) {
+        console.error("Fetch transactions error:", error);
+        return { success: false, data: [], message: 'Failed to fetch transactions.' };
+    }
+}

@@ -3,11 +3,35 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getPostDetails, getPostComments } from '@/lib/api/forum';
 import { getUserSession } from '@/lib/core/session';
-import { ArrowLeft, User, Calendar } from 'lucide-react';
+import { ArrowLeft, User, Calendar, Shield, Crown } from 'lucide-react';
+import { Chip } from '@heroui/react';
 import VoteContainer from './VoteContainer';
 import DiscussionSection from './DiscussionSection'; 
 
-
+const getRoleBadge = (authorRole) => {
+    if (authorRole === 'admin') {
+        return (
+            <Chip 
+                size="sm"
+                className="bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
+                startContent={<Shield className="size-3" />}
+            >
+                Admin
+            </Chip>
+        );
+    } else if (authorRole === 'trainer') {
+        return (
+            <Chip 
+                size="sm"
+                className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
+                startContent={<Crown className="size-3" />}
+            >
+                Trainer
+            </Chip>
+        );
+    }
+    return null;
+};
 
 export default async function PostDetailsPage({ params }) {
     const { id } = await params;
@@ -68,11 +92,12 @@ export default async function PostDetailsPage({ params }) {
                         />
                     )}
 
-                    <div className="flex items-center gap-4 text-zinc-400 text-xs font-medium mb-4">
+                    <div className="flex items-center flex-wrap gap-2 text-zinc-400 text-xs font-medium mb-4">
                         <span className="flex items-center gap-1.5 text-zinc-700">
                             <User className="w-4 h-4 text-zinc-400" />
                             {post.authorName || 'Verified Staff'}
                         </span>
+                        {getRoleBadge(post.authorRole)}
                         <span className="flex items-center gap-1.5">
                             <Calendar className="w-4 h-4 text-zinc-400" />
                             {new Date(post.createdAt).toLocaleDateString(undefined, {
@@ -99,13 +124,11 @@ export default async function PostDetailsPage({ params }) {
                     />
                 </article>
 
-               
                 <DiscussionSection 
                     postId={id} 
                     initialComments={comments} 
                     currentUser={currentUser} 
                 />
-
             </div>
         </div>
     );

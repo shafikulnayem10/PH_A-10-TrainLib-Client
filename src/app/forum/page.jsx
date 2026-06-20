@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { getAllForumPosts } from '@/lib/api/forum';
-import { Card, Button } from '@heroui/react';
-import { ArrowRight, User, Calendar } from 'lucide-react';
+import { Card, Button, Chip } from '@heroui/react';
+import { ArrowRight, User, Calendar, Shield, Crown } from 'lucide-react';
 
 export const revalidate = 0; 
 
@@ -16,6 +16,31 @@ export default async function ForumPage() {
         console.error("Error loading forum posts:", err);
         error = "Failed to load community forum posts. Please try again later.";
     }
+
+    const getRoleBadge = (authorRole) => {
+        if (authorRole === 'admin') {
+            return (
+                <Chip 
+                    size="sm"
+                    className="bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
+                    startContent={<Shield className="size-3" />}
+                >
+                    Admin
+                </Chip>
+            );
+        } else if (authorRole === 'trainer') {
+            return (
+                <Chip 
+                    size="sm"
+                    className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
+                    startContent={<Crown className="size-3" />}
+                >
+                    Trainer
+                </Chip>
+            );
+        }
+        return null;
+    };
 
     return (
         <div className="w-full min-h-screen bg-white text-zinc-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -67,11 +92,12 @@ export default async function ForumPage() {
 
                             {/* Post Content */}
                             <div className="p-5 flex flex-col flex-grow">
-                                <div className="flex items-center gap-4 text-zinc-400 text-[11px] font-medium mb-3">
+                                <div className="flex items-center flex-wrap gap-2 text-zinc-400 text-[11px] font-medium mb-3">
                                     <span className="flex items-center gap-1">
                                         <User className="w-3.5 h-3.5 text-zinc-400" />
-                                        {post.author || 'Staff Member'}
+                                        {post.authorName || 'Staff Member'}
                                     </span>
+                                    {getRoleBadge(post.authorRole)}
                                     {post.createdAt && (
                                         <span className="flex items-center gap-1">
                                             <Calendar className="w-3.5 h-3.5 text-zinc-400" />
