@@ -45,15 +45,20 @@ export function DashboardSidebar() {
     const pathname = usePathname();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [role, setRole] = useState('user');
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
+                setLoading(true);
                 const { data } = await authClient.getSession();
-                setUser(data?.user || null);
+                const userData = data?.user || null;
+                setUser(userData);
+                setRole(userData?.role || 'user');
             } catch (error) {
                 console.error("Error fetching user session:", error);
                 setUser(null);
+                setRole('user');
             } finally {
                 setLoading(false);
             }
@@ -67,8 +72,28 @@ export function DashboardSidebar() {
         admin: adminNavLinks,
     };
 
-    const currentRole = user?.role || "user";
+    const currentRole = role;
     const navItems = navLinksMap[currentRole] || userNavLinks;
+
+    // Check if a link is active
+    const isLinkActive = (href) => {
+        // Exact match for the home/overview page
+        if (href === pathname) {
+            return true;
+        }
+        
+       
+        if (href !== `/dashboard/${currentRole}` && pathname.startsWith(href)) {
+            return true;
+        }
+        
+        
+        if (href === `/dashboard/${currentRole}` && pathname === href) {
+            return true;
+        }
+        
+        return false;
+    };
 
     const navContent = (
         <div className="flex flex-col h-full justify-between">
@@ -78,14 +103,14 @@ export function DashboardSidebar() {
                     <div className="flex items-center gap-2">
                         <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
                         <h2 className="text-[10px] font-black tracking-widest text-blue-600 uppercase">
-                            {currentRole} Menu
+                            {currentRole.charAt(0).toUpperCase() + currentRole.slice(1)} Menu
                         </h2>
                     </div>
                 </div>
 
                 <nav className="flex flex-col gap-1">
                     {navItems.map((item) => {
-                        const isActive = pathname === item.href;
+                        const isActive = isLinkActive(item.href);
                         return (
                             <Link
                                 key={item.label}
@@ -143,7 +168,7 @@ export function DashboardSidebar() {
 
     return (
         <>
-            {/* Desktop Aside Panel - More compact */}
+          
             <aside className="hidden w-52 shrink-0 border-r border-slate-100 bg-white p-3 lg:block shadow-[1px_0_15px_rgba(59,130,246,0.05)]">
                 {navContent}
             </aside>

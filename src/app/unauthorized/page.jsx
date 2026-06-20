@@ -1,8 +1,13 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Shield, Home, ArrowLeft, Lock, AlertTriangle } from 'lucide-react';
 
 export default function UnauthorizedPage() {
+    const router = useRouter();
+
     return (
         <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50/30 flex flex-col justify-center items-center p-6 select-none relative overflow-hidden">
             {/* Blue Glow Effects */}
@@ -53,7 +58,7 @@ export default function UnauthorizedPage() {
                         Go Home
                     </Link>
                     <button
-                        onClick={() => window.history.back()}
+                        onClick={() => router.back()}
                         className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-3 px-6 rounded-2xl transition-all border border-blue-200 flex items-center justify-center gap-2"
                     >
                         <ArrowLeft className="w-4 h-4" />
