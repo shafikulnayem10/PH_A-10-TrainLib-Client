@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@heroui/react";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 
 import logoImg from "../../../public/images/trainliblogo.jpg"; 
 
@@ -12,20 +13,24 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const getSession = async () => {
+    try {
+      setLoading(true);
+      const { data } = await authClient.getSession();
+      setSession(data);
+    } catch (error) {
+      console.error("Error fetching session:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getSession = async () => {
-      try {
-        const { data } = await authClient.getSession();
-        setSession(data);
-      } catch (error) {
-        console.error("Error fetching session:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     getSession();
-  }, []);
+  }, [pathname]);
 
   const user = session?.user;
 
@@ -33,6 +38,8 @@ export default function Navbar() {
     await authClient.signOut();
     setSession(null);
     setIsMenuOpen(false);
+    router.push('/');
+    router.refresh();
   };
 
   const navLinks = [
@@ -93,7 +100,6 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* LOGO & BRAND */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/60 bg-white shadow-sm transition-transform duration-200 group-hover:scale-105 overflow-hidden">
             <Image
@@ -112,10 +118,8 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* RIGHT SIDE: DESKTOP NAVIGATION & AUTH */}
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-6 md:flex">
-            {/* Nav Links */}
             <ul className="flex items-center gap-1 rounded-full border border-slate-100 bg-slate-100 px-3 py-1.5">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -129,10 +133,8 @@ export default function Navbar() {
               ))}
             </ul>
 
-            {/* Vertical Divider */}
             <div className="h-6 w-px bg-slate-200" />
 
-            {/* Auth Section */}
             <div className="flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-3">
@@ -163,7 +165,6 @@ export default function Navbar() {
                     Login
                   </Link>
                   
-                  {/* Desktop Register Button */}
                   <Link href="/register">
                     <Button
                       radius="xl"
@@ -177,7 +178,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="flex items-center justify-center rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 md:hidden"
@@ -196,11 +196,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
       {isMenuOpen && (
         <div className="border-t border-slate-100 bg-white md:hidden animate-in slide-in-from-top-2 duration-150">
           <div className="space-y-3 px-4 py-6">
-            {/* Nav Links */}
             <ul className="space-y-1">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -215,7 +213,6 @@ export default function Navbar() {
               ))}
             </ul>
 
-            {/* Divider & Auth Section */}
             <div className="border-t border-slate-100 pt-4">
               <div className="flex flex-col gap-3">
                 {user ? (
@@ -251,7 +248,6 @@ export default function Navbar() {
                       Login
                     </Link>
 
-                    {/* Mobile Responsive Register Button */}
                     <Link href="/register" onClick={() => setIsMenuOpen(false)}>
                       <Button
                         className="w-full bg-blue-600 font-bold text-white shadow-md shadow-blue-600/10 py-5"

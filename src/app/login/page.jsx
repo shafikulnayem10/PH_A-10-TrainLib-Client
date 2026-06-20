@@ -19,7 +19,6 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
- 
   const redirectTo = searchParams.get("redirect") || "/";
 
   const onSubmit = async (e) => {
@@ -37,7 +36,7 @@ export default function LoginPage() {
       toast.error(error.message || "Login failed. Please check your credentials.");
     } else {
       toast.success("Welcome back!");
-      router.push(redirectTo); 
+      router.push(redirectTo);
       router.refresh();
     }
   };
@@ -46,13 +45,15 @@ export default function LoginPage() {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: redirectTo, 
+        callbackURL: redirectTo,
       });
       toast.success("Welcome!");
     } catch (err) {
       toast.error("Google sign-in failed.");
     }
   };
+
+  // ... rest of your component
 
   const uiInputStyles = {
     input: "text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium",
