@@ -50,3 +50,10 @@ export const createAdminForumPost = async (postData) => {
 export const getTransactions = async () => {
     return await protectedFetch("/api/admin/transactions");
 };
+export const getAllForumPosts = async () => {
+    return await protectedFetch("/api/admin/forum/all-posts");
+};
+
+export const deleteForumPost = async (postId) => {
+    return await serverMutation(`/api/admin/forum/${postId}`, {}, 'DELETE');
+};

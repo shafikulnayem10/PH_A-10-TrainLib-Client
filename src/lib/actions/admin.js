@@ -126,3 +126,20 @@ export async function fetchTransactionsAction() {
         return { success: false, data: [], message: 'Failed to fetch transactions.' };
     }
 }
+export async function fetchAllForumPostsAction() {
+    try {
+        return await protectedFetch("/api/admin/forum/all-posts");
+    } catch (error) {
+        console.error("Fetch all forum posts error:", error);
+        return { success: false, data: [], message: 'Failed to fetch forum posts.' };
+    }
+}
+
+export async function deleteForumPostAction(postId) {
+    try {
+        return await serverMutation(`/api/admin/forum/${postId}`, {}, 'DELETE');
+    } catch (error) {
+        console.error("Delete forum post error:", error);
+        return { success: false, message: 'Failed to delete forum post.' };
+    }
+}
