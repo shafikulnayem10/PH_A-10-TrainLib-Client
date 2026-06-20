@@ -15,3 +15,11 @@ export const updateUserStatus = async (userId, status) => {
 export const makeUserAdmin = async (userId) => {
     return await serverMutation(`/api/admin/users/${userId}/make-admin`, {}, 'PATCH');
 };
+
+export const getTrainerApplications = async () => {
+    return await protectedFetch("/api/admin/trainer-applications");
+};
+
+export const updateTrainerApplication = async (applicationId, data) => {
+    return await serverMutation(`/api/admin/trainer-applications/${applicationId}`, data, 'PATCH');
+};

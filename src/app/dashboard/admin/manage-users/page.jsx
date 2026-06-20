@@ -241,11 +241,7 @@ export default function ManageUsersPage() {
                                         <Table.Row key={user.id || user._id} className="hover:bg-slate-50/50 transition">
                                             <Table.Cell>
                                                 <div className="flex items-center gap-3">
-                                                    <Avatar 
-                                                        src={user.image || undefined}
-                                                        name={user.name || 'User'}
-                                                        className="w-8 h-8 text-sm"
-                                                    />
+                                                   
                                                     <span className="font-semibold text-slate-900">
                                                         {user.name || 'Unknown User'}
                                                     </span>
