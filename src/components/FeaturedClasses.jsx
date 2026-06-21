@@ -12,18 +12,24 @@ export default function FeaturedClasses() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  
-    serverFetch("/featured-classes")
-      .then((data) => {
+  setLoading(true);
+  serverFetch("/featured-classes")
+    .then((data) => {
+     
+      if (Array.isArray(data)) {
         setClasses(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error loading featured classes:", err);
-        setLoading(false);
-      });
-  }, []);
-
+      } else {
+        console.error("Backend did not return an array:", data);
+        setClasses([]);
+      }
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error("Error loading featured classes:", err);
+      setClasses([]);
+      setLoading(false);
+    });
+}, []);
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -77,7 +83,7 @@ export default function FeaturedClasses() {
           viewport={{ once: true, amount: 0.1 }}
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {classes.map((cls) => (
+         {Array.isArray(classes) && classes.map((cls) => (
             <motion.div
               key={cls._id}
               variants={cardVariants}
