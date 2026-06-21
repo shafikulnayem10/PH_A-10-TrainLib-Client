@@ -13,7 +13,6 @@ export default async function ClassDetailsPage({ params }) {
 
   const user = await getUserSession();
   
- 
   if (!user) {
     redirect(`/login?redirect=/classes/${classId}`);
   }
@@ -95,11 +94,18 @@ export default async function ClassDetailsPage({ params }) {
                     <Calendar className="w-4 h-4 text-blue-600" />
                     <span>Level: <span className="text-slate-900 dark:text-white font-black capitalize">{classData.difficulty || "All Levels"}</span></span>
                   </div>
+                  {/* Schedule Display */}
+                  {classData.classSchedule && (
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <Clock className="w-4 h-4 text-emerald-600" />
+                      <span>Schedule: <span className="text-emerald-600 dark:text-emerald-400 font-black">{classData.classSchedule}</span></span>
+                    </div>
+                  )}
                 </div>
 
                 <div>
                   <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider mb-3">
-                    Course Description & Schedule
+                    Course Description 
                   </h3>
                   <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
                     {classData.description || "No schedule details or additional description available for this program at this time."}
