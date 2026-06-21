@@ -6,17 +6,21 @@ const LatestPosts = async () => {
     let posts = [];
 
     try {
-       
-        posts = await serverFetch("/latest-posts");
+        const data = await serverFetch("/latest-posts");
+        // Ensure data is an array
+        posts = Array.isArray(data) ? data : [];
     } catch (error) {
         console.error("Error loading forum posts directly inside component:", error);
+        posts = [];
     }
 
     if (!posts || posts.length === 0) {
         return (
-            <div className="text-center py-10">
-                <p className="text-slate-500 text-sm">No forum posts found at the moment.</p>
-            </div>
+            <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center py-10">
+                    <p className="text-slate-500 text-sm">No forum posts found at the moment.</p>
+                </div>
+            </section>
         );
     }
 
