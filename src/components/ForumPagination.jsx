@@ -18,7 +18,6 @@ export default function ForumPagination({ currentPage, totalPages, totalPosts, p
 
     if (totalPages <= 1) return null;
 
-    // Generate page numbers with ellipsis
     const getPageNumbers = () => {
         const pages = [];
         const delta = 1;
