@@ -27,17 +27,26 @@ export default function LoginPage() {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const { data, error } = await authClient.signIn.email({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+      });
 
-    if (error) {
-      toast.error(error.message || "Login failed. Please check your credentials.");
-    } else {
-      toast.success("Welcome back!");
-      router.push(redirectTo);
-      router.refresh();
+      if (error) {
+        toast.error(error.message || "Login failed. Please check your credentials.");
+      } else {
+        toast.success("Welcome back!");
+        await new Promise(resolve => setTimeout(resolve, 100));
+        if (redirectTo) {
+          window.location.href = redirectTo;
+        } else {
+          window.location.href = "/";
+        }
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("An error occurred during login. Please try again.");
     }
   };
 
@@ -52,8 +61,6 @@ export default function LoginPage() {
       toast.error("Google sign-in failed.");
     }
   };
-
-  // ... rest of your component
 
   const uiInputStyles = {
     input: "text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium",
@@ -140,7 +147,6 @@ export default function LoginPage() {
           Continue with Google
         </Button>
 
-    
         <p className="text-center text-sm text-slate-600 dark:text-slate-400 font-medium">
           New to TrainLib?{" "}
           <Link href={`/register?redirect=${encodeURIComponent(redirectTo)}`} className="text-blue-600 font-extrabold hover:text-blue-700 dark:hover:text-blue-400 hover:underline">

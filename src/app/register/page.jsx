@@ -27,19 +27,28 @@ export default function RegisterPage() {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const { data, error } = await authClient.signUp.email({
-      email,
-      password,
-      name,
-      callbackURL: redirectTo,
-    });
+    try {
+      const { data, error } = await authClient.signUp.email({
+        email,
+        password,
+        name,
+        callbackURL: redirectTo,
+      });
 
-    if (error) {
-      toast.error(error.message || "Registration failed. Please try again.");
-    } else {
-      toast.success("Account created successfully!");
-      router.push(redirectTo);
-      router.refresh();
+      if (error) {
+        toast.error(error.message || "Registration failed. Please try again.");
+      } else {
+        toast.success("Account created successfully!");
+        await new Promise(resolve => setTimeout(resolve, 100));
+        if (redirectTo) {
+          window.location.href = redirectTo;
+        } else {
+          window.location.href = "/";
+        }
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("An error occurred during registration. Please try again.");
     }
   };
 
