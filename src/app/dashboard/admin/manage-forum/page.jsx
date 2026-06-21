@@ -117,7 +117,6 @@ export default function ManageForumPage() {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
@@ -143,9 +142,8 @@ export default function ManageForumPage() {
                 </div>
             </div>
 
-            {/* Stats Summary */}
             {posts.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                     <div className="bg-blue-50/30 border border-blue-100 rounded-xl p-4">
                         <p className="text-xs text-slate-500 font-medium">Total Posts</p>
                         <p className="text-2xl font-bold text-blue-700">{posts.length}</p>
@@ -160,12 +158,6 @@ export default function ManageForumPage() {
                         <p className="text-xs text-slate-500 font-medium">Trainer Posts</p>
                         <p className="text-2xl font-bold text-blue-700">
                             {posts.filter(p => p.authorRole === 'trainer').length}
-                        </p>
-                    </div>
-                    <div className="bg-emerald-50/30 border border-emerald-100 rounded-xl p-4">
-                        <p className="text-xs text-slate-500 font-medium">Total Comments</p>
-                        <p className="text-2xl font-bold text-emerald-700">
-                            {posts.reduce((sum, p) => sum + (p.comments?.length || 0), 0)}
                         </p>
                     </div>
                 </div>
@@ -188,11 +180,10 @@ export default function ManageForumPage() {
                     <div className="overflow-x-auto">
                         <Table aria-label="Manage forum posts table">
                             <Table.ScrollContainer>
-                                <Table.Content className="min-w-[1000px]">
+                                <Table.Content className="min-w-[900px]">
                                     <Table.Header>
                                         <Table.Column>POST</Table.Column>
                                         <Table.Column>AUTHOR</Table.Column>
-                                        <Table.Column>COMMENTS</Table.Column>
                                         <Table.Column>LIKES</Table.Column>
                                         <Table.Column>CREATED</Table.Column>
                                         <Table.Column align="center">ACTIONS</Table.Column>
@@ -235,15 +226,6 @@ export default function ManageForumPage() {
                                                             {post.authorEmail || 'No email'}
                                                         </span>
                                                     </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Chip
-                                                        size="sm"
-                                                        className="bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold"
-                                                        startContent={<MessageSquare className="size-3" />}
-                                                    >
-                                                        {post.comments?.length || 0}
-                                                    </Chip>
                                                 </Table.Cell>
                                                 <Table.Cell>
                                                     <Chip
@@ -293,7 +275,6 @@ export default function ManageForumPage() {
                 </Card>
             )}
 
-            {/* Delete Confirmation Modal */}
             <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
                 <Modal.Backdrop className="bg-red-950/20 backdrop-blur-sm">
                     <Modal.Container>

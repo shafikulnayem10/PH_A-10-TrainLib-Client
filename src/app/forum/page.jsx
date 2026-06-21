@@ -1,8 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { getAllForumPosts } from '@/lib/api/forum';
-import { Card, Button, Chip, Pagination } from '@heroui/react';
+import { Card, Button, Chip } from '@heroui/react';
 import { ArrowRight, User, Calendar, Shield, Crown } from 'lucide-react';
+import ForumPagination from '@/components/ForumPagination';
 
 export const revalidate = 0; 
 
@@ -24,7 +25,6 @@ export default async function ForumPage({ searchParams }) {
     const posts = responseData?.posts || [];
     const totalPosts = responseData?.total || 0;
     const totalPages = responseData?.totalPages || 1;
-    const startIndex = (currentPage - 1) * postsPerPage;
 
     const getRoleBadge = (authorRole) => {
         if (authorRole === 'admin') {
@@ -49,24 +49,6 @@ export default async function ForumPage({ searchParams }) {
             );
         }
         return null;
-    };
-
-    // Generate page numbers for pagination
-    const getPageNumbers = (current, totalP) => {
-        const delta = 1;
-        const range = [];
-
-        for (let i = Math.max(2, current - delta); i <= Math.min(totalP - 1, current + delta); i++) {
-            range.push(i);
-        }
-
-        if (current - delta > 2) range.unshift("ellipsis-start");
-        if (current + delta < totalP - 1) range.push("ellipsis-end");
-
-        range.unshift(1);
-        if (totalP > 1) range.push(totalP);
-
-        return range;
     };
 
     return (
@@ -108,7 +90,6 @@ export default async function ForumPage({ searchParams }) {
                                     key={post._id} 
                                     className="bg-white border border-zinc-200 rounded-2xl overflow-hidden flex flex-col h-full shadow-sm hover:shadow-md transition-all duration-200 hover:border-zinc-300"
                                 >
-                                    {/* Post Thumbnail Image */}
                                     {post.image && (
                                         <div className="relative w-full h-40 bg-zinc-100 overflow-hidden border-b border-zinc-100">
                                             <img 
@@ -119,7 +100,6 @@ export default async function ForumPage({ searchParams }) {
                                         </div>
                                     )}
 
-                                    {/* Post Content */}
                                     <div className="p-4 flex flex-col flex-grow">
                                         <div className="flex items-center flex-wrap gap-1.5 text-zinc-400 text-[10px] font-medium mb-2">
                                             <span className="flex items-center gap-1">
@@ -147,7 +127,6 @@ export default async function ForumPage({ searchParams }) {
                                             {post.description}
                                         </p>
 
-                                        {/* Read More Button */}
                                         <div className="pt-3 border-t border-zinc-100 mt-auto">
                                             <Link href={`/forum/${post._id}`}>
                                                 <Button 
@@ -163,55 +142,13 @@ export default async function ForumPage({ searchParams }) {
                             ))}
                         </div>
 
-                        {/* Pagination */}
-                        {totalPages > 1 && (
-                            <div className="w-full flex flex-col items-center justify-center gap-2 mt-10">
-                                <Pagination>
-                                    <Pagination.Summary className="text-xs text-zinc-500">
-                                        Showing {startIndex + 1}-{Math.min(startIndex + postsPerPage, totalPosts)} of {totalPosts} posts
-                                    </Pagination.Summary>
-
-                                    <Pagination.Content>
-                                        <Pagination.Item>
-                                            <Pagination.Previous
-                                                isDisabled={currentPage === 1}
-                                                href={`/forum?page=${currentPage - 1}`}
-                                            >
-                                                <Pagination.PreviousIcon />
-                                                <span>Previous</span>
-                                            </Pagination.Previous>
-                                        </Pagination.Item>
-
-                                        {getPageNumbers(currentPage, totalPages).map((p, idx) =>
-                                            p === "ellipsis-start" || p === "ellipsis-end" ? (
-                                                <Pagination.Item key={`${p}-${idx}`}>
-                                                    <Pagination.Ellipsis />
-                                                </Pagination.Item>
-                                            ) : (
-                                                <Pagination.Item key={p}>
-                                                    <Pagination.Link
-                                                        isActive={p === currentPage}
-                                                        href={`/forum?page=${p}`}
-                                                    >
-                                                        {p}
-                                                    </Pagination.Link>
-                                                </Pagination.Item>
-                                            )
-                                        )}
-
-                                        <Pagination.Item>
-                                            <Pagination.Next
-                                                isDisabled={currentPage === totalPages}
-                                                href={`/forum?page=${currentPage + 1}`}
-                                            >
-                                                <span>Next</span>
-                                                <Pagination.NextIcon />
-                                            </Pagination.Next>
-                                        </Pagination.Item>
-                                    </Pagination.Content>
-                                </Pagination>
-                            </div>
-                        )}
+                      
+                        <ForumPagination 
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            totalPosts={totalPosts}
+                            postsPerPage={postsPerPage}
+                        />
                     </>
                 )}
             </div>

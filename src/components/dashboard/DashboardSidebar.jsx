@@ -16,8 +16,7 @@ const userNavLinks = [
     { icon: Calendar,    href: "/dashboard/user/booked-classes",   label: "Booked Classes" },
     { icon: Star,        href: "/dashboard/user/favorites",        label: "Favorites" },
     { icon: FileText,    href: "/dashboard/user/apply-trainer",    label: "Apply as Trainer" },
-    { icon: Person,      href: "/dashboard/user/profile",          label: "Manage Profile" },
-    { icon: Gear,        href: "/dashboard/user/settings",         label: "Settings" },
+
 ];
 
 const trainerNavLinks = [
@@ -26,7 +25,7 @@ const trainerNavLinks = [
     { icon: Briefcase,   href: "/dashboard/trainer/my-classes",     label: "My Classes" },
     { icon: Bell,        href: "/dashboard/trainer/add-forum-post", label: "Add Forum Post" },
     { icon: Comments,    href: "/dashboard/trainer/my-forum-posts", label: "My Forum Posts" },
-    { icon: Gear,        href: "/dashboard/trainer/settings",       label: "Settings" },
+
 ];
 
 const adminNavLinks = [
@@ -38,7 +37,7 @@ const adminNavLinks = [
     { icon: Star,          href: "/dashboard/admin/transactions",         label: "Transactions" }, 
     { icon: Bell,          href: "/dashboard/admin/add-forum-post",       label: "Add Forum Post" },
     { icon: ShieldAlert,   href: "/dashboard/admin/manage-forum",         label: "Manage Forum" },
-    { icon: Gear,          href: "/dashboard/admin/settings",             label: "Settings" },
+  
 ];
 
 export function DashboardSidebar() {
@@ -108,7 +107,7 @@ export function DashboardSidebar() {
                     </div>
                 </div>
 
-                <nav className="flex flex-col gap-1">
+                <nav className="flex flex-col gap-10">
                     {navItems.map((item) => {
                         const isActive = isLinkActive(item.href);
                         return (
