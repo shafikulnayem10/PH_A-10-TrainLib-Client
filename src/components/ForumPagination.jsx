@@ -1,11 +1,10 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Pagination } from '@heroui/react';
 
 export default function ForumPagination({ currentPage, totalPages, totalPosts, postsPerPage }) {
     const router = useRouter();
-    const pathname = usePathname();
 
     const handlePageChange = (page) => {
         if (page === 1) {
@@ -18,6 +17,35 @@ export default function ForumPagination({ currentPage, totalPages, totalPosts, p
     const startIndex = (currentPage - 1) * postsPerPage;
 
     if (totalPages <= 1) return null;
+
+    // Generate page numbers with ellipsis
+    const getPageNumbers = () => {
+        const pages = [];
+        const delta = 1;
+        const range = [];
+
+        for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+            range.push(i);
+        }
+
+        if (currentPage - delta > 2) {
+            pages.push(1, 'ellipsis-start');
+        } else {
+            pages.push(1);
+        }
+
+        pages.push(...range);
+
+        if (currentPage + delta < totalPages - 1) {
+            pages.push('ellipsis-end', totalPages);
+        } else if (totalPages > 1) {
+            pages.push(totalPages);
+        }
+
+        return pages;
+    };
+
+    const pageNumbers = getPageNumbers();
 
     return (
         <div className="w-full flex flex-col items-center justify-center gap-2 mt-10">
@@ -37,22 +65,14 @@ export default function ForumPagination({ currentPage, totalPages, totalPosts, p
                         </Pagination.Previous>
                     </Pagination.Item>
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                        // Show ellipsis logic
-                        if (totalPages > 7) {
-                            if (page > 3 && page < totalPages - 2 && page !== currentPage && 
-                                (page < currentPage - 2 || page > currentPage + 2)) {
-                                if (page === 4 || page === totalPages - 3) {
-                                    return (
-                                        <Pagination.Item key={`ellipsis-${page}`}>
-                                            <Pagination.Ellipsis />
-                                        </Pagination.Item>
-                                    );
-                                }
-                                return null;
-                            }
+                    {pageNumbers.map((page, index) => {
+                        if (page === 'ellipsis-start' || page === 'ellipsis-end') {
+                            return (
+                                <Pagination.Item key={`ellipsis-${index}`}>
+                                    <Pagination.Ellipsis />
+                                </Pagination.Item>
+                            );
                         }
-
                         return (
                             <Pagination.Item key={page}>
                                 <Pagination.Link

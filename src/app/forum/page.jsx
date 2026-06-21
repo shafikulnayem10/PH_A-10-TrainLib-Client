@@ -142,7 +142,7 @@ export default async function ForumPage({ searchParams }) {
                             ))}
                         </div>
 
-                      
+                        {/* Pagination */}
                         <ForumPagination 
                             currentPage={currentPage}
                             totalPages={totalPages}
