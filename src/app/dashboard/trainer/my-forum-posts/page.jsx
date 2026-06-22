@@ -210,10 +210,7 @@ export default function MyForumPostsPage() {
 
                                 {/* Stats */}
                                 <div className="flex items-center gap-4 text-xs font-medium mb-4 pt-3 border-t border-blue-50">
-                                    <span className="flex items-center gap-1.5 text-blue-400">
-                                        <MessageCircle className="size-3.5 text-blue-400" />
-                                        {post.comments?.length || 0}
-                                    </span>
+                                    
                                     <span className="flex items-center gap-1.5 text-emerald-600">
                                         <ThumbsUp className="size-3.5" />
                                         {post.likes?.length || 0}
