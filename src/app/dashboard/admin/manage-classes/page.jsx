@@ -56,16 +56,19 @@ export default function ManageClassesPage() {
 
         const classId = selectedClass._id;
         const previousClasses = classes;
-        
+        let newStatus = '';
+
+        // Optimistic UI Update - Set new status based on action
         if (actionType === 'delete') {
             setClasses(prevClasses => 
                 prevClasses.filter(cls => cls._id !== classId)
             );
         } else {
+            newStatus = actionType === 'approve' || actionType === 'reapprove' ? 'approved' : 'rejected';
             setClasses(prevClasses => 
                 prevClasses.map(cls => 
                     cls._id === classId 
-                        ? { ...cls, status: actionType === 'approve' || actionType === 'reapprove' ? 'approved' : actionType === 'reject' ? 'rejected' : cls.status }
+                        ? { ...cls, status: newStatus }
                         : cls
                 )
             );
@@ -86,12 +89,16 @@ export default function ManageClassesPage() {
             if (result?.success) {
                 toast.success(result.message);
                 setShowConfirmModal(false);
+                // Refetch to ensure consistency with server
+                await fetchClasses();
             } else {
+                // Revert on failure
                 setClasses(previousClasses);
                 toast.error(result?.message || "Action failed");
             }
         } catch (error) {
             console.error("Error performing action:", error);
+            // Revert on error
             setClasses(previousClasses);
             toast.error("Network error. Please try again.");
         } finally {
@@ -215,7 +222,15 @@ export default function ManageClassesPage() {
                         <BookOpen className="size-6" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Manage Classes</h1>
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Manage Classes</h1>
+                            <Chip 
+                                size="sm" 
+                                className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
+                            >
+                                Total: {classes.length}
+                            </Chip>
+                        </div>
                         <p className="text-slate-500 text-sm">
                             Review and manage all class submissions from trainers
                         </p>
