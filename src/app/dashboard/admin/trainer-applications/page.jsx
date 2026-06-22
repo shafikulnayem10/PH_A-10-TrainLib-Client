@@ -55,9 +55,16 @@ export default function TrainerApplicationsPage() {
     const handleApprove = async () => {
         setActionType('approve');
         setProcessing(true);
+
+        const applicationId = selectedApplication._id;
+        const previousApplications = applications;
+        setApplications(prevApps => 
+            prevApps.filter(app => app._id !== applicationId)
+        );
+
         try {
             const result = await updateTrainerApplicationAction(
-                selectedApplication._id,
+                applicationId,
                 'Approved',
                 null
             );
@@ -65,12 +72,14 @@ export default function TrainerApplicationsPage() {
             if (result?.success) {
                 toast.success("Application approved! User is now a trainer.");
                 setShowDetailsModal(false);
-                fetchApplications();
+                setSelectedApplication(null);
             } else {
+                setApplications(previousApplications);
                 toast.error(result?.message || "Failed to approve application.");
             }
         } catch (error) {
             console.error("Error approving application:", error);
+            setApplications(previousApplications);
             toast.error("Network error. Please try again.");
         } finally {
             setProcessing(false);
@@ -86,9 +95,16 @@ export default function TrainerApplicationsPage() {
 
         setActionType('reject');
         setProcessing(true);
+
+        const applicationId = selectedApplication._id;
+        const previousApplications = applications;
+        setApplications(prevApps => 
+            prevApps.filter(app => app._id !== applicationId)
+        );
+
         try {
             const result = await updateTrainerApplicationAction(
-                selectedApplication._id,
+                applicationId,
                 'Rejected',
                 feedback.trim()
             );
@@ -96,12 +112,15 @@ export default function TrainerApplicationsPage() {
             if (result?.success) {
                 toast.success("Application rejected. Feedback has been sent.");
                 setShowDetailsModal(false);
-                fetchApplications();
+                setSelectedApplication(null);
+                setFeedback('');
             } else {
+                setApplications(previousApplications);
                 toast.error(result?.message || "Failed to reject application.");
             }
         } catch (error) {
             console.error("Error rejecting application:", error);
+            setApplications(previousApplications);
             toast.error("Network error. Please try again.");
         } finally {
             setProcessing(false);
@@ -235,6 +254,7 @@ export default function TrainerApplicationsPage() {
                                                         onClick={() => handleViewDetails(app)}
                                                         className="bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold"
                                                         startContent={<Eye className="size-3.5" />}
+                                                        disabled={processing}
                                                     >
                                                         Details
                                                     </Button>
@@ -249,7 +269,6 @@ export default function TrainerApplicationsPage() {
                 </Card>
             )}
 
-            {/* Details Modal */}
             <Modal isOpen={showDetailsModal} onClose={() => setShowDetailsModal(false)}>
                 <Modal.Backdrop className="bg-slate-950/20 backdrop-blur-sm">
                     <Modal.Container>
@@ -264,7 +283,7 @@ export default function TrainerApplicationsPage() {
                             max-w-lg
                             "
                         >
-                            <Modal.CloseTrigger onClick={() => setShowDetailsModal(false)} />
+                            <Modal.CloseTrigger onClick={() => setShowDetailsModal(false)} disabled={processing} />
                             <Modal.Header
                                 className="
                                 bg-gradient-to-r
@@ -337,7 +356,6 @@ export default function TrainerApplicationsPage() {
                                             </div>
                                         )}
 
-                                        {/* Feedback section - only shown when reject button is clicked */}
                                         <div className={`border-t border-slate-200 pt-4 transition-all duration-200 ${actionType === 'reject' ? 'block' : 'hidden'}`}>
                                             <label className="text-sm font-bold text-red-700 block mb-2">
                                                 Feedback Required for Rejection
@@ -360,7 +378,6 @@ export default function TrainerApplicationsPage() {
                                             )}
                                         </div>
 
-                                        {/* Message when approving */}
                                         {actionType === 'approve' && (
                                             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
                                                 <p className="text-sm text-emerald-700 font-medium">
@@ -413,6 +430,7 @@ export default function TrainerApplicationsPage() {
                                             className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex-1 shadow-lg shadow-emerald-200"
                                             onClick={() => setActionType('approve')}
                                             startContent={<CheckCircle className="size-4" />}
+                                            disabled={processing}
                                         >
                                             Approve
                                         </Button>
@@ -421,6 +439,7 @@ export default function TrainerApplicationsPage() {
                                             className="bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl flex-1 shadow-lg shadow-red-200"
                                             onClick={() => setActionType('reject')}
                                             startContent={<XCircle className="size-4" />}
+                                            disabled={processing}
                                         >
                                             Reject
                                         </Button>

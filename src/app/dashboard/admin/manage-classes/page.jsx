@@ -53,36 +53,46 @@ export default function ManageClassesPage() {
 
     const confirmAction = async () => {
         setProcessing(true);
+
+        const classId = selectedClass._id;
+        const previousClasses = classes;
+        
+        if (actionType === 'delete') {
+            setClasses(prevClasses => 
+                prevClasses.filter(cls => cls._id !== classId)
+            );
+        } else {
+            setClasses(prevClasses => 
+                prevClasses.map(cls => 
+                    cls._id === classId 
+                        ? { ...cls, status: actionType === 'approve' || actionType === 'reapprove' ? 'approved' : actionType === 'reject' ? 'rejected' : cls.status }
+                        : cls
+                )
+            );
+        }
+
         try {
             let result;
             if (actionType === 'approve') {
-                result = await updateClassStatusAction(selectedClass._id, 'approved');
+                result = await updateClassStatusAction(classId, 'approved');
             } else if (actionType === 'reject') {
-                result = await updateClassStatusAction(selectedClass._id, 'rejected');
+                result = await updateClassStatusAction(classId, 'rejected');
             } else if (actionType === 'delete') {
-                result = await deleteClassAction(selectedClass._id);
+                result = await deleteClassAction(classId);
             } else if (actionType === 'reapprove') {
-                result = await updateClassStatusAction(selectedClass._id, 'approved');
+                result = await updateClassStatusAction(classId, 'approved');
             }
 
             if (result?.success) {
                 toast.success(result.message);
                 setShowConfirmModal(false);
-                // Update the specific class in the local state immediately
-                setClasses(prevClasses => 
-                    prevClasses.map(cls => 
-                        cls._id === selectedClass._id 
-                            ? { ...cls, status: actionType === 'approve' || actionType === 'reapprove' ? 'approved' : actionType === 'reject' ? 'rejected' : cls.status }
-                            : cls
-                    )
-                );
-                // Then refetch to ensure consistency
-                await fetchClasses();
             } else {
+                setClasses(previousClasses);
                 toast.error(result?.message || "Action failed");
             }
         } catch (error) {
             console.error("Error performing action:", error);
+            setClasses(previousClasses);
             toast.error("Network error. Please try again.");
         } finally {
             setProcessing(false);
@@ -141,6 +151,7 @@ export default function ManageClassesPage() {
                         onClick={() => handleAction(classData, 'approve')}
                         className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
                         startContent={<CheckCircle className="size-3" />}
+                        disabled={processing}
                     >
                         Approve
                     </Button>
@@ -149,6 +160,7 @@ export default function ManageClassesPage() {
                         onClick={() => handleAction(classData, 'reject')}
                         className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
                         startContent={<XCircle className="size-3" />}
+                        disabled={processing}
                     >
                         Reject
                     </Button>
@@ -162,6 +174,7 @@ export default function ManageClassesPage() {
                         onClick={() => handleAction(classData, 'reject')}
                         className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
                         startContent={<XCircle className="size-3" />}
+                        disabled={processing}
                     >
                         Reject
                     </Button>
@@ -175,6 +188,7 @@ export default function ManageClassesPage() {
                         onClick={() => handleAction(classData, 'reapprove')}
                         className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
                         startContent={<RotateCcw className="size-3" />}
+                        disabled={processing}
                     >
                         Approve
                     </Button>
@@ -310,6 +324,7 @@ export default function ManageClassesPage() {
                                                             onClick={() => handleAction(classData, 'delete')}
                                                             className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[70px] h-8 text-xs font-semibold"
                                                             startContent={<Trash2 className="size-3" />}
+                                                            disabled={processing}
                                                         >
                                                             Delete
                                                         </Button>
@@ -339,7 +354,7 @@ export default function ManageClassesPage() {
                             max-w-md
                             `}
                         >
-                            <Modal.CloseTrigger onClick={() => setShowConfirmModal(false)} />
+                            <Modal.CloseTrigger onClick={() => setShowConfirmModal(false)} disabled={processing} />
                             <Modal.Header
                                 className={`
                                 bg-gradient-to-r

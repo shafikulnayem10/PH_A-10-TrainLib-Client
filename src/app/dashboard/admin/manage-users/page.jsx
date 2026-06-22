@@ -48,7 +48,6 @@ export default function ManageUsersPage() {
     }, []);
 
     const handleAction = (user, type) => {
-        console.log("Selected user:", user); // Debug
         setSelectedUser(user);
         setActionType(type);
         setShowConfirmModal(true);
@@ -56,19 +55,44 @@ export default function ManageUsersPage() {
 
     const confirmAction = async () => {
         setProcessing(true);
+
+        const userId = selectedUser?.id || selectedUser?._id;
+        
+        if (!userId) {
+            toast.error("User ID not found");
+            setProcessing(false);
+            return;
+        }
+
+        const previousUsers = users;
+        
+        if (actionType === 'block') {
+            setUsers(prevUsers =>
+                prevUsers.map(u => 
+                    (u.id === userId || u._id === userId) 
+                        ? { ...u, softBanned: true }
+                        : u
+                )
+            );
+        } else if (actionType === 'unblock') {
+            setUsers(prevUsers =>
+                prevUsers.map(u => 
+                    (u.id === userId || u._id === userId) 
+                        ? { ...u, softBanned: false }
+                        : u
+                )
+            );
+        } else if (actionType === 'make-admin') {
+            setUsers(prevUsers =>
+                prevUsers.map(u => 
+                    (u.id === userId || u._id === userId) 
+                        ? { ...u, role: 'admin' }
+                        : u
+                )
+            );
+        }
+
         try {
-            // Get the correct user ID
-            const userId = selectedUser?.id || selectedUser?._id;
-            
-            if (!userId) {
-                toast.error("User ID not found");
-                setProcessing(false);
-                return;
-            }
-
-            console.log("User ID:", userId); // Debug
-            console.log("Action Type:", actionType); // Debug
-
             let result;
             if (actionType === 'block') {
                 result = await updateUserStatusAction(userId, 'blocked');
@@ -78,17 +102,16 @@ export default function ManageUsersPage() {
                 result = await makeUserAdminAction(userId);
             }
 
-            console.log("Action result:", result); // Debug
-
             if (result?.success) {
                 toast.success(result.message);
                 setShowConfirmModal(false);
-                fetchUsers();
             } else {
+                setUsers(previousUsers);
                 toast.error(result?.message || "Action failed");
             }
         } catch (error) {
             console.error("Error performing action:", error);
+            setUsers(previousUsers);
             toast.error("Network error. Please try again.");
         } finally {
             setProcessing(false);
@@ -182,7 +205,6 @@ export default function ManageUsersPage() {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
@@ -208,7 +230,6 @@ export default function ManageUsersPage() {
                 </div>
             </div>
 
-            {/* Search */}
             <div className="mb-6">
                 <Input
                     placeholder="Search by name or email..."
@@ -222,7 +243,6 @@ export default function ManageUsersPage() {
                 />
             </div>
 
-            {/* Users Table */}
             <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table aria-label="Manage users table">
@@ -274,6 +294,7 @@ export default function ManageUsersPage() {
                                                             onClick={() => handleAction(user, 'make-admin')}
                                                             className="bg-purple-50 text-purple-600 hover:bg-purple-100 min-w-[80px] h-8 text-xs font-semibold"
                                                             startContent={<Crown className="size-3" />}
+                                                            disabled={processing}
                                                         >
                                                             Make Admin
                                                         </Button>
@@ -286,6 +307,7 @@ export default function ManageUsersPage() {
                                                             onClick={() => handleAction(user, 'unblock')}
                                                             className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
                                                             startContent={<CheckCircle className="size-3" />}
+                                                            disabled={processing}
                                                         >
                                                             Unblock
                                                         </Button>
@@ -297,6 +319,7 @@ export default function ManageUsersPage() {
                                                                 onClick={() => handleAction(user, 'block')}
                                                                 className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
                                                                 startContent={<Ban className="size-3" />}
+                                                                disabled={processing}
                                                             >
                                                                 Block
                                                             </Button>
@@ -313,7 +336,6 @@ export default function ManageUsersPage() {
                 </div>
             </Card>
 
-            {/* Confirmation Modal */}
             <Modal isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)}>
                 <Modal.Backdrop className="bg-slate-950/20 backdrop-blur-sm">
                     <Modal.Container>
@@ -328,7 +350,7 @@ export default function ManageUsersPage() {
                             max-w-md
                             "
                         >
-                            <Modal.CloseTrigger onClick={() => setShowConfirmModal(false)} />
+                            <Modal.CloseTrigger onClick={() => setShowConfirmModal(false)} disabled={processing} />
                             <Modal.Header
                                 className="
                                 bg-gradient-to-r

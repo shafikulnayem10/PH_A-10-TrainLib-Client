@@ -51,18 +51,27 @@ export default function ManageForumPage() {
 
     const confirmDelete = async () => {
         setProcessing(true);
+
+        const postId = selectedPost._id;
+        const previousPosts = posts;
+        setPosts(prevPosts => 
+            prevPosts.filter(post => post._id !== postId)
+        );
+
         try {
-            const result = await deleteForumPostAction(selectedPost._id);
+            const result = await deleteForumPostAction(postId);
 
             if (result?.success) {
                 toast.success("Forum post deleted successfully!");
                 setShowDeleteModal(false);
-                fetchPosts();
+                setSelectedPost(null);
             } else {
+                setPosts(previousPosts);
                 toast.error(result?.message || "Failed to delete post.");
             }
         } catch (error) {
             console.error("Error deleting post:", error);
+            setPosts(previousPosts);
             toast.error("Network error. Please try again.");
         } finally {
             setProcessing(false);
@@ -260,6 +269,7 @@ export default function ManageForumPage() {
                                                             onClick={() => handleDeleteClick(post)}
                                                             className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[70px] h-8 text-xs font-semibold"
                                                             startContent={<Trash2 className="size-3" />}
+                                                            disabled={processing}
                                                         >
                                                             Delete
                                                         </Button>
@@ -289,7 +299,7 @@ export default function ManageForumPage() {
                             max-w-md
                             "
                         >
-                            <Modal.CloseTrigger onClick={() => setShowDeleteModal(false)} />
+                            <Modal.CloseTrigger onClick={() => setShowDeleteModal(false)} disabled={processing} />
                             <Modal.Header
                                 className="
                                 bg-gradient-to-r
