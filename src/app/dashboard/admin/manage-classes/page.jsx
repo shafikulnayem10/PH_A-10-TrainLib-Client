@@ -68,7 +68,16 @@ export default function ManageClassesPage() {
             if (result?.success) {
                 toast.success(result.message);
                 setShowConfirmModal(false);
-                fetchClasses();
+                // Update the specific class in the local state immediately
+                setClasses(prevClasses => 
+                    prevClasses.map(cls => 
+                        cls._id === selectedClass._id 
+                            ? { ...cls, status: actionType === 'approve' || actionType === 'reapprove' ? 'approved' : actionType === 'reject' ? 'rejected' : cls.status }
+                            : cls
+                    )
+                );
+                // Then refetch to ensure consistency
+                await fetchClasses();
             } else {
                 toast.error(result?.message || "Action failed");
             }
@@ -316,7 +325,6 @@ export default function ManageClassesPage() {
                 </Card>
             )}
 
-            {/* Confirmation Modal */}
             <Modal isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)}>
                 <Modal.Backdrop className={`${actionType === 'delete' ? 'bg-red-950/20' : actionType === 'approve' || actionType === 'reapprove' ? 'bg-green-950/20' : 'bg-amber-950/20'} backdrop-blur-sm`}>
                     <Modal.Container>
