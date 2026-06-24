@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Chip, Button, Spinner, Modal, Avatar
+    Card, Chip, Button, Spinner, Modal
 } from "@heroui/react";
 import {
     MessageSquare, Trash2, Eye, User, Mail,
     Calendar, RefreshCw, AlertTriangle, X,
-    Shield, Crown, Clock, FileText
+    Shield, Crown, Clock
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Link from 'next/link';
@@ -188,22 +187,20 @@ export default function ManageForumPage() {
             ) : (
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
-                        <Table aria-label="Manage forum posts table">
-                            <TableHeader>
-                                <TableColumn isRowHeader>POST</TableColumn>
-                                <TableColumn>AUTHOR</TableColumn>
-                                <TableColumn>LIKES</TableColumn>
-                                <TableColumn>CREATED</TableColumn>
-                                <TableColumn align="center">ACTIONS</TableColumn>
-                            </TableHeader>
-                           
-                            <TableBody
-                                items={posts}
-                                emptyContent="No forum posts found."
-                            >
-                                {(post) => (
-                                    <TableRow key={post._id} className="hover:bg-slate-50/50 transition">
-                                        <TableCell>
+                        <table className="w-full text-sm">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">POST</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">AUTHOR</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">LIKES</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">CREATED</th>
+                                    <th className="text-center px-4 py-3 font-semibold text-slate-700">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {posts.map((post) => (
+                                    <tr key={post._id} className="hover:bg-slate-50/50 transition border-b border-slate-100">
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
                                                 {post.image && (
                                                     <img
@@ -224,8 +221,8 @@ export default function ManageForumPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <div className="flex flex-col">
                                                 <div className="flex items-center gap-1.5">
                                                     <span className="font-semibold text-slate-900 text-sm">
@@ -238,8 +235,8 @@ export default function ManageForumPage() {
                                                     {post.authorEmail || 'No email'}
                                                 </span>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <Chip
                                                 size="sm"
                                                 className="bg-rose-50 text-rose-700 border border-rose-200 font-semibold"
@@ -247,14 +244,14 @@ export default function ManageForumPage() {
                                             >
                                                 {post.likes?.length || 0}
                                             </Chip>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <span className="text-sm text-slate-600 flex items-center gap-1">
                                                 <Calendar className="size-3.5 text-slate-400" />
                                                 {formatDate(post.createdAt)}
                                             </span>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center justify-center gap-1.5">
                                                 <Link href={`/forum/${post._id}`} target="_blank">
                                                     <Button
@@ -277,11 +274,11 @@ export default function ManageForumPage() {
                                                     Delete
                                                 </Button>
                                             </div>
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </Card>
             )}

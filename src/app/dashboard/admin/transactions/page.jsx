@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Chip, Button, Spinner, Input, Pagination
+    Card, Chip, Button, Spinner, Input, Pagination
 } from "@heroui/react";
 import {
     DollarSign, Calendar, User, Mail, RefreshCw,
@@ -213,23 +212,21 @@ export default function TransactionsPage() {
                 <>
                     <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
-                            <Table aria-label="Transactions table">
-                                <TableHeader>
-                                    <TableColumn isRowHeader>USER</TableColumn>
-                                    <TableColumn>CLASS</TableColumn>
-                                    <TableColumn>AMOUNT</TableColumn>
-                                    <TableColumn>DATE</TableColumn>
-                                    <TableColumn>STATUS</TableColumn>
-                                    <TableColumn>TRANSACTION ID</TableColumn>
-                                </TableHeader>
-                             
-                                <TableBody
-                                    items={paginatedTransactions}
-                                    emptyContent="No transactions found."
-                                >
-                                    {(transaction) => (
-                                        <TableRow key={transaction._id} className="hover:bg-slate-50/50 transition">
-                                            <TableCell>
+                            <table className="w-full text-sm">
+                                <thead className="bg-slate-50 border-b border-slate-200">
+                                    <tr>
+                                        <th className="text-left px-4 py-3 font-semibold text-slate-700">USER</th>
+                                        <th className="text-left px-4 py-3 font-semibold text-slate-700">CLASS</th>
+                                        <th className="text-left px-4 py-3 font-semibold text-slate-700">AMOUNT</th>
+                                        <th className="text-left px-4 py-3 font-semibold text-slate-700">DATE</th>
+                                        <th className="text-left px-4 py-3 font-semibold text-slate-700">STATUS</th>
+                                        <th className="text-left px-4 py-3 font-semibold text-slate-700">TRANSACTION ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {paginatedTransactions.map((transaction) => (
+                                        <tr key={transaction._id} className="hover:bg-slate-50/50 transition border-b border-slate-100">
+                                            <td className="px-4 py-3">
                                                 <div className="flex flex-col">
                                                     <span className="font-semibold text-slate-900">
                                                         {transaction.userName || 'Unknown User'}
@@ -239,36 +236,36 @@ export default function TransactionsPage() {
                                                         {transaction.userEmail || 'No email'}
                                                     </span>
                                                 </div>
-                                            </TableCell>
-                                            <TableCell>
+                                            </td>
+                                            <td className="px-4 py-3">
                                                 <span className="text-sm text-slate-700">
                                                     {transaction.className || 'Unknown Class'}
                                                 </span>
-                                            </TableCell>
-                                            <TableCell>
+                                            </td>
+                                            <td className="px-4 py-3">
                                                 <span className="font-bold text-slate-900 flex items-center gap-1">
                                                     <DollarSign className="size-3.5 text-slate-400" />
                                                     {formatCurrency(transaction.amount)}
                                                 </span>
-                                            </TableCell>
-                                            <TableCell>
+                                            </td>
+                                            <td className="px-4 py-3">
                                                 <span className="text-sm text-slate-600 flex items-center gap-1">
                                                     <Calendar className="size-3.5 text-slate-400" />
                                                     {formatDate(transaction.date)}
                                                 </span>
-                                            </TableCell>
-                                            <TableCell>
+                                            </td>
+                                            <td className="px-4 py-3">
                                                 {getStatusChip(transaction.status || 'completed')}
-                                            </TableCell>
-                                            <TableCell>
+                                            </td>
+                                            <td className="px-4 py-3">
                                                 <span className="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
                                                     {transaction.transactionId?.slice(0, 12)}...
                                                 </span>
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </Card>
 

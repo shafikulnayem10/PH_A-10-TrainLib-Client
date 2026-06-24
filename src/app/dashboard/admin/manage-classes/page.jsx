@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Chip, Button, Spinner, Modal, Avatar
+    Card, Chip, Button, Spinner, Modal
 } from "@heroui/react";
 import {
     BookOpen, CheckCircle, XCircle, Clock, Calendar,
-    User, Mail, RefreshCw, AlertTriangle, X,
-    Eye, Trash2, UserCog, DollarSign, Award, RotateCcw
+    Mail, RefreshCw, AlertTriangle, X,
+    Trash2, DollarSign, RotateCcw
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
@@ -258,23 +257,21 @@ export default function ManageClassesPage() {
             ) : (
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
-                        <Table aria-label="Manage classes table">
-                            <TableHeader>
-                                <TableColumn isRowHeader>CLASS</TableColumn>
-                                <TableColumn>TRAINER</TableColumn>
-                                <TableColumn>CATEGORY</TableColumn>
-                                <TableColumn>PRICE</TableColumn>
-                                <TableColumn>STATUS</TableColumn>
-                                <TableColumn align="center">ACTIONS</TableColumn>
-                            </TableHeader>
-                            {/* ✅ FIX: items prop + render function */}
-                            <TableBody
-                                items={classes}
-                                emptyContent="No classes found."
-                            >
-                                {(classData) => (
-                                    <TableRow key={classData._id} className="hover:bg-slate-50/50 transition">
-                                        <TableCell>
+                        <table className="w-full text-sm">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">CLASS</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">TRAINER</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">CATEGORY</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">PRICE</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">STATUS</th>
+                                    <th className="text-center px-4 py-3 font-semibold text-slate-700">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {classes.map((classData) => (
+                                    <tr key={classData._id} className="hover:bg-slate-50/50 transition border-b border-slate-100">
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
                                                 <img
                                                     src={classData.image || "/placeholder.jpg"}
@@ -294,8 +291,8 @@ export default function ManageClassesPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center gap-2">
                                                 <div>
                                                     <span className="text-sm font-semibold text-slate-900 block">
@@ -307,25 +304,25 @@ export default function ManageClassesPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <Chip
                                                 size="sm"
                                                 className="bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
                                             >
                                                 {classData.category || 'Uncategorized'}
                                             </Chip>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <span className="font-bold text-slate-900 flex items-center gap-1">
                                                 <DollarSign className="size-3.5 text-slate-400" />
                                                 {classData.price || 0}
                                             </span>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             {getStatusChip(classData.status)}
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center justify-center gap-1.5 flex-wrap">
                                                 {getActionButtons(classData)}
                                                 <Button
@@ -339,11 +336,11 @@ export default function ManageClassesPage() {
                                                     Delete
                                                 </Button>
                                             </div>
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </Card>
             )}

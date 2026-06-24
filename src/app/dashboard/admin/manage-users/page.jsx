@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Chip, Button, Spinner, Modal, Avatar, Input
+    Card, Chip, Button, Spinner, Modal, Input
 } from "@heroui/react";
 import {
     Users, Shield, User, Mail, Calendar,
@@ -246,48 +245,46 @@ export default function ManageUsersPage() {
 
             <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
-                    <Table aria-label="Manage users table">
-                        <TableHeader>
-                            <TableColumn isRowHeader>USER</TableColumn>
-                            <TableColumn>EMAIL</TableColumn>
-                            <TableColumn>ROLE</TableColumn>
-                            <TableColumn>STATUS</TableColumn>
-                            <TableColumn>JOINED</TableColumn>
-                            <TableColumn align="center">ACTIONS</TableColumn>
-                        </TableHeader>
-                       
-                        <TableBody
-                            items={filteredUsers}
-                            emptyContent={searchTerm ? "No users match your search." : "No users found."}
-                        >
-                            {(user) => (
-                                <TableRow key={user.id || user._id} className="hover:bg-slate-50/50 transition">
-                                    <TableCell>
+                    <table className="w-full text-sm">
+                        <thead className="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th className="text-left px-4 py-3 font-semibold text-slate-700">USER</th>
+                                <th className="text-left px-4 py-3 font-semibold text-slate-700">EMAIL</th>
+                                <th className="text-left px-4 py-3 font-semibold text-slate-700">ROLE</th>
+                                <th className="text-left px-4 py-3 font-semibold text-slate-700">STATUS</th>
+                                <th className="text-left px-4 py-3 font-semibold text-slate-700">JOINED</th>
+                                <th className="text-center px-4 py-3 font-semibold text-slate-700">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredUsers.map((user) => (
+                                <tr key={user.id || user._id} className="hover:bg-slate-50/50 transition border-b border-slate-100">
+                                    <td className="px-4 py-3">
                                         <div className="flex items-center gap-3">
                                             <span className="font-semibold text-slate-900">
                                                 {user.name || 'Unknown User'}
                                             </span>
                                         </div>
-                                    </TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">
                                         <span className="text-slate-600 text-sm flex items-center gap-1">
                                             <Mail className="size-3.5 text-slate-400" />
                                             {user.email || 'No email'}
                                         </span>
-                                    </TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">
                                         {getRoleChip(user.role)}
-                                    </TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">
                                         {getStatusChip(user)}
-                                    </TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">
                                         <span className="text-slate-500 text-xs flex items-center gap-1">
                                             <Calendar className="size-3 text-slate-400" />
                                             {formatDate(user.createdAt)}
                                         </span>
-                                    </TableCell>
-                                    <TableCell>
+                                    </td>
+                                    <td className="px-4 py-3">
                                         <div className="flex items-center justify-center gap-1.5 flex-wrap">
                                             {user.role !== 'admin' && (
                                                 <Button
@@ -328,11 +325,11 @@ export default function ManageUsersPage() {
                                                 )
                                             )}
                                         </div>
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </Card>
 

@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Chip, Button, Spinner, Modal,
+    Card, Chip, Button, Spinner, Modal
 } from "@heroui/react";
 import {
-    Users, UserCog, User, Mail, Calendar,
+    UserCog, User, Mail, Calendar,
     RefreshCw, AlertTriangle, X, Crown,
     Shield, Clock, UserMinus
 } from "lucide-react";
@@ -131,22 +130,20 @@ export default function ManageTrainersPage() {
             ) : (
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
-                        <Table aria-label="Trainers table">
-                            <TableHeader>
-                                <TableColumn isRowHeader>TRAINER</TableColumn>
-                                <TableColumn>EMAIL</TableColumn>
-                                <TableColumn>STATUS</TableColumn>
-                                <TableColumn>JOINED</TableColumn>
-                                <TableColumn align="center">ACTIONS</TableColumn>
-                            </TableHeader>
-                          
-                            <TableBody
-                                items={trainers}
-                                emptyContent="No trainers found."
-                            >
-                                {(trainer) => (
-                                    <TableRow key={trainer._id} className="hover:bg-slate-50/50 transition">
-                                        <TableCell>
+                        <table className="w-full text-sm">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">TRAINER</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">EMAIL</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">STATUS</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">JOINED</th>
+                                    <th className="text-center px-4 py-3 font-semibold text-slate-700">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {trainers.map((trainer) => (
+                                    <tr key={trainer._id} className="hover:bg-slate-50/50 transition border-b border-slate-100">
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
                                                 <div>
                                                     <span className="font-semibold text-slate-900 block">
@@ -158,14 +155,14 @@ export default function ManageTrainersPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <span className="text-slate-600 text-sm flex items-center gap-1">
                                                 <Mail className="size-3.5 text-slate-400" />
                                                 {trainer.email || 'No email'}
                                             </span>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <Chip
                                                 size="sm"
                                                 className="bg-green-50 text-green-700 border border-green-200 font-semibold"
@@ -173,14 +170,14 @@ export default function ManageTrainersPage() {
                                             >
                                                 Active
                                             </Chip>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <span className="text-slate-500 text-xs flex items-center gap-1">
                                                 <Calendar className="size-3 text-slate-400" />
                                                 {formatDate(trainer.createdAt)}
                                             </span>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <Button
                                                 size="sm"
                                                 variant="flat"
@@ -190,11 +187,11 @@ export default function ManageTrainersPage() {
                                             >
                                                 Demote to User
                                             </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </Card>
             )}

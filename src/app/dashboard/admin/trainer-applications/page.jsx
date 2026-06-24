@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Chip, Button, Spinner, Modal, Input, TextArea
+    Card, Chip, Button, Spinner, Modal, Input, TextArea
 } from "@heroui/react";
 import {
     Users, Eye, CheckCircle, XCircle, Calendar,
@@ -199,22 +198,20 @@ export default function TrainerApplicationsPage() {
             ) : (
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
-                        <Table aria-label="Trainer applications table">
-                            <TableHeader>
-                                <TableColumn isRowHeader>APPLICANT</TableColumn>
-                                <TableColumn>SPECIALTY</TableColumn>
-                                <TableColumn>EXPERIENCE</TableColumn>
-                                <TableColumn>APPLIED ON</TableColumn>
-                                <TableColumn align="center">ACTIONS</TableColumn>
-                            </TableHeader>
-                          
-                            <TableBody
-                                items={applications}
-                                emptyContent="No applications found."
-                            >
-                                {(app) => (
-                                    <TableRow key={app._id} className="hover:bg-slate-50/50 transition">
-                                        <TableCell>
+                        <table className="w-full text-sm">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">APPLICANT</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">SPECIALTY</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">EXPERIENCE</th>
+                                    <th className="text-left px-4 py-3 font-semibold text-slate-700">APPLIED ON</th>
+                                    <th className="text-center px-4 py-3 font-semibold text-slate-700">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {applications.map((app) => (
+                                    <tr key={app._id} className="hover:bg-slate-50/50 transition border-b border-slate-100">
+                                        <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
                                                 <div>
                                                     <span className="font-semibold text-slate-900 block">
@@ -226,21 +223,21 @@ export default function TrainerApplicationsPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <Chip
                                                 size="sm"
                                                 className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
                                             >
                                                 {app.specialty || 'Not specified'}
                                             </Chip>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <span className="font-semibold text-slate-900">
                                                 {app.experience || 0} years
                                             </span>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-slate-600">
                                                     {formatDate(app.appliedAt)}
@@ -249,8 +246,8 @@ export default function TrainerApplicationsPage() {
                                                     {formatTime(app.appliedAt)}
                                                 </span>
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td className="px-4 py-3">
                                             <Button
                                                 size="sm"
                                                 onClick={() => handleViewDetails(app)}
@@ -260,11 +257,11 @@ export default function TrainerApplicationsPage() {
                                             >
                                                 Details
                                             </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </Card>
             )}
