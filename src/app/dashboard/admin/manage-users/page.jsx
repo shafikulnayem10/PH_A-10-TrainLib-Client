@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { 
-    Card, Table, Chip, Button, Spinner, Modal, Avatar, Input
+    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Chip, Button, Spinner, Modal, Avatar, Input
 } from "@heroui/react";
 import { 
     Users, Shield, User, Mail, Calendar, 
@@ -246,92 +247,87 @@ export default function ManageUsersPage() {
             <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table aria-label="Manage users table">
-                        <Table.ScrollContainer>
-                            <Table.Content className="min-w-[900px]">
-                                <Table.Header>
-                                    <Table.Column>USER</Table.Column>
-                                    <Table.Column>EMAIL</Table.Column>
-                                    <Table.Column>ROLE</Table.Column>
-                                    <Table.Column>STATUS</Table.Column>
-                                    <Table.Column>JOINED</Table.Column>
-                                    <Table.Column align="center">ACTIONS</Table.Column>
-                                </Table.Header>
-                                <Table.Body>
-                                    {filteredUsers.map((user) => (
-                                        <Table.Row key={user.id || user._id} className="hover:bg-slate-50/50 transition">
-                                            <Table.Cell>
-                                                <div className="flex items-center gap-3">
-                                                   
-                                                    <span className="font-semibold text-slate-900">
-                                                        {user.name || 'Unknown User'}
-                                                    </span>
-                                                </div>
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                <span className="text-slate-600 text-sm flex items-center gap-1">
-                                                    <Mail className="size-3.5 text-slate-400" />
-                                                    {user.email || 'No email'}
-                                                </span>
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {getRoleChip(user.role)}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {getStatusChip(user)}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                <span className="text-slate-500 text-xs flex items-center gap-1">
-                                                    <Calendar className="size-3 text-slate-400" />
-                                                    {formatDate(user.createdAt)}
-                                                </span>
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                <div className="flex items-center justify-center gap-1.5 flex-wrap">
-                                                    {user.role !== 'admin' && (
-                                                        <Button
-                                                            size="sm"
-                                                            variant="flat"
-                                                            onClick={() => handleAction(user, 'make-admin')}
-                                                            className="bg-purple-50 text-purple-600 hover:bg-purple-100 min-w-[80px] h-8 text-xs font-semibold"
-                                                            startContent={<Crown className="size-3" />}
-                                                            disabled={processing}
-                                                        >
-                                                            Make Admin
-                                                        </Button>
-                                                    )}
-                                                    
-                                                    {isUserSoftBlocked(user) ? (
-                                                        <Button
-                                                            size="sm"
-                                                            variant="flat"
-                                                            onClick={() => handleAction(user, 'unblock')}
-                                                            className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
-                                                            startContent={<CheckCircle className="size-3" />}
-                                                            disabled={processing}
-                                                        >
-                                                            Unblock
-                                                        </Button>
-                                                    ) : (
-                                                        user.role !== 'admin' && (
-                                                            <Button
-                                                                size="sm"
-                                                                variant="flat"
-                                                                onClick={() => handleAction(user, 'block')}
-                                                                className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
-                                                                startContent={<Ban className="size-3" />}
-                                                                disabled={processing}
-                                                            >
-                                                                Block
-                                                            </Button>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table.Content>
-                        </Table.ScrollContainer>
+                        <TableHeader>
+                            <TableColumn isRowHeader>USER</TableColumn>
+                            <TableColumn>EMAIL</TableColumn>
+                            <TableColumn>ROLE</TableColumn>
+                            <TableColumn>STATUS</TableColumn>
+                            <TableColumn>JOINED</TableColumn>
+                            <TableColumn align="center">ACTIONS</TableColumn>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredUsers.map((user) => (
+                                <TableRow key={user.id || user._id} className="hover:bg-slate-50/50 transition">
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <span className="font-semibold text-slate-900">
+                                                {user.name || 'Unknown User'}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="text-slate-600 text-sm flex items-center gap-1">
+                                            <Mail className="size-3.5 text-slate-400" />
+                                            {user.email || 'No email'}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        {getRoleChip(user.role)}
+                                    </TableCell>
+                                    <TableCell>
+                                        {getStatusChip(user)}
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="text-slate-500 text-xs flex items-center gap-1">
+                                            <Calendar className="size-3 text-slate-400" />
+                                            {formatDate(user.createdAt)}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                                            {user.role !== 'admin' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="flat"
+                                                    onClick={() => handleAction(user, 'make-admin')}
+                                                    className="bg-purple-50 text-purple-600 hover:bg-purple-100 min-w-[80px] h-8 text-xs font-semibold"
+                                                    startContent={<Crown className="size-3" />}
+                                                    disabled={processing}
+                                                >
+                                                    Make Admin
+                                                </Button>
+                                            )}
+                                            
+                                            {isUserSoftBlocked(user) ? (
+                                                <Button
+                                                    size="sm"
+                                                    variant="flat"
+                                                    onClick={() => handleAction(user, 'unblock')}
+                                                    className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
+                                                    startContent={<CheckCircle className="size-3" />}
+                                                    disabled={processing}
+                                                >
+                                                    Unblock
+                                                </Button>
+                                            ) : (
+                                                user.role !== 'admin' && (
+                                                    <Button
+                                                        size="sm"
+                                                        variant="flat"
+                                                        onClick={() => handleAction(user, 'block')}
+                                                        className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
+                                                        startContent={<Ban className="size-3" />}
+                                                        disabled={processing}
+                                                    >
+                                                        Block
+                                                    </Button>
+                                                )
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
                     </Table>
                 </div>
             </Card>

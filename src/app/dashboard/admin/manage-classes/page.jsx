@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, Chip, Button, Spinner, Modal, Avatar
+    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Chip, Button, Spinner, Modal, Avatar
 } from "@heroui/react";
 import {
     BookOpen, CheckCircle, XCircle, Clock, Calendar,
@@ -58,7 +59,6 @@ export default function ManageClassesPage() {
         const previousClasses = classes;
         let newStatus = '';
 
-        // Optimistic UI Update - Set new status based on action
         if (actionType === 'delete') {
             setClasses(prevClasses => 
                 prevClasses.filter(cls => cls._id !== classId)
@@ -89,16 +89,13 @@ export default function ManageClassesPage() {
             if (result?.success) {
                 toast.success(result.message);
                 setShowConfirmModal(false);
-                // Refetch to ensure consistency with server
                 await fetchClasses();
             } else {
-                // Revert on failure
                 setClasses(previousClasses);
                 toast.error(result?.message || "Action failed");
             }
         } catch (error) {
             console.error("Error performing action:", error);
-            // Revert on error
             setClasses(previousClasses);
             toast.error("Network error. Please try again.");
         } finally {
@@ -266,90 +263,86 @@ export default function ManageClassesPage() {
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <Table aria-label="Manage classes table">
-                            <Table.ScrollContainer>
-                                <Table.Content className="min-w-[1000px]">
-                                    <Table.Header>
-                                        <Table.Column>CLASS</Table.Column>
-                                        <Table.Column>TRAINER</Table.Column>
-                                        <Table.Column>CATEGORY</Table.Column>
-                                        <Table.Column>PRICE</Table.Column>
-                                        <Table.Column>STATUS</Table.Column>
-                                        <Table.Column align="center">ACTIONS</Table.Column>
-                                    </Table.Header>
-                                    <Table.Body>
-                                        {classes.map((classData) => (
-                                            <Table.Row key={classData._id} className="hover:bg-slate-50/50 transition">
-                                                <Table.Cell>
-                                                    <div className="flex items-center gap-3">
-                                                        <img
-                                                            src={classData.image || "/placeholder.jpg"}
-                                                            alt={classData.className}
-                                                            className="w-12 h-12 rounded-lg object-cover border border-slate-200"
-                                                            onError={(e) => {
-                                                                e.target.src = '/placeholder.jpg';
-                                                            }}
-                                                        />
-                                                        <div>
-                                                            <span className="font-semibold text-slate-900 block line-clamp-1">
-                                                                {classData.className || 'Unknown Class'}
-                                                            </span>
-                                                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                                <Clock className="size-3" />
-                                                                {classData.duration || 'N/A'}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <div className="flex items-center gap-2">
-                                                        <div>
-                                                            <span className="text-sm font-semibold text-slate-900 block">
-                                                                {classData.trainerName || 'Unknown Trainer'}
-                                                            </span>
-                                                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                                <Mail className="size-3" />
-                                                                {classData.trainerEmail || 'No email'}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Chip
-                                                        size="sm"
-                                                        className="bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
-                                                    >
-                                                        {classData.category || 'Uncategorized'}
-                                                    </Chip>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <span className="font-bold text-slate-900 flex items-center gap-1">
-                                                        <DollarSign className="size-3.5 text-slate-400" />
-                                                        {classData.price || 0}
+                            <TableHeader>
+                                <TableColumn isRowHeader>CLASS</TableColumn>
+                                <TableColumn>TRAINER</TableColumn>
+                                <TableColumn>CATEGORY</TableColumn>
+                                <TableColumn>PRICE</TableColumn>
+                                <TableColumn>STATUS</TableColumn>
+                                <TableColumn align="center">ACTIONS</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {classes.map((classData) => (
+                                    <TableRow key={classData._id} className="hover:bg-slate-50/50 transition">
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={classData.image || "/placeholder.jpg"}
+                                                    alt={classData.className}
+                                                    className="w-12 h-12 rounded-lg object-cover border border-slate-200"
+                                                    onError={(e) => {
+                                                        e.target.src = '/placeholder.jpg';
+                                                    }}
+                                                />
+                                                <div>
+                                                    <span className="font-semibold text-slate-900 block line-clamp-1">
+                                                        {classData.className || 'Unknown Class'}
                                                     </span>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    {getStatusChip(classData.status)}
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <div className="flex items-center justify-center gap-1.5 flex-wrap">
-                                                        {getActionButtons(classData)}
-                                                        <Button
-                                                            size="sm"
-                                                            variant="flat"
-                                                            onClick={() => handleAction(classData, 'delete')}
-                                                            className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[70px] h-8 text-xs font-semibold"
-                                                            startContent={<Trash2 className="size-3" />}
-                                                            disabled={processing}
-                                                        >
-                                                            Delete
-                                                        </Button>
-                                                    </div>
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        ))}
-                                    </Table.Body>
-                                </Table.Content>
-                            </Table.ScrollContainer>
+                                                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                                                        <Clock className="size-3" />
+                                                        {classData.duration || 'N/A'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <span className="text-sm font-semibold text-slate-900 block">
+                                                        {classData.trainerName || 'Unknown Trainer'}
+                                                    </span>
+                                                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                                                        <Mail className="size-3" />
+                                                        {classData.trainerEmail || 'No email'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                size="sm"
+                                                className="bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
+                                            >
+                                                {classData.category || 'Uncategorized'}
+                                            </Chip>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="font-bold text-slate-900 flex items-center gap-1">
+                                                <DollarSign className="size-3.5 text-slate-400" />
+                                                {classData.price || 0}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            {getStatusChip(classData.status)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                                                {getActionButtons(classData)}
+                                                <Button
+                                                    size="sm"
+                                                    variant="flat"
+                                                    onClick={() => handleAction(classData, 'delete')}
+                                                    className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[70px] h-8 text-xs font-semibold"
+                                                    startContent={<Trash2 className="size-3" />}
+                                                    disabled={processing}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
                         </Table>
                     </div>
                 </Card>

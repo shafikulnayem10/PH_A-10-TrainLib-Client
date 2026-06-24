@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, Chip, Button, Spinner, Modal,
+    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Chip, Button, Spinner, Modal,
 } from "@heroui/react";
 import {
     Users, UserCog, User, Mail, Calendar,
@@ -131,75 +132,69 @@ export default function ManageTrainersPage() {
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <Table aria-label="Trainers table">
-                            <Table.ScrollContainer>
-                                <Table.Content className="min-w-[900px]">
-                                    <Table.Header>
-                                        <Table.Column>TRAINER</Table.Column>
-                                        <Table.Column>EMAIL</Table.Column>
-                                        <Table.Column>STATUS</Table.Column>
-                                        <Table.Column>JOINED</Table.Column>
-                                        <Table.Column align="center">ACTIONS</Table.Column>
-                                    </Table.Header>
-                                    <Table.Body>
-                                        {trainers.map((trainer) => (
-                                            <Table.Row key={trainer._id} className="hover:bg-slate-50/50 transition">
-                                                <Table.Cell>
-                                                    <div className="flex items-center gap-3">
-                                                       
-                                                        <div>
-                                                            <span className="font-semibold text-slate-900 block">
-                                                                {trainer.name || 'Unknown Trainer'}
-                                                            </span>
-                                                            <span className="text-xs text-blue-600 flex items-center gap-1">
-                                                                <Crown className="size-3" />
-                                                                Trainer
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <span className="text-slate-600 text-sm flex items-center gap-1">
-                                                        <Mail className="size-3.5 text-slate-400" />
-                                                        {trainer.email || 'No email'}
+                            <TableHeader>
+                                <TableColumn isRowHeader>TRAINER</TableColumn>
+                                <TableColumn>EMAIL</TableColumn>
+                                <TableColumn>STATUS</TableColumn>
+                                <TableColumn>JOINED</TableColumn>
+                                <TableColumn align="center">ACTIONS</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {trainers.map((trainer) => (
+                                    <TableRow key={trainer._id} className="hover:bg-slate-50/50 transition">
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <div>
+                                                    <span className="font-semibold text-slate-900 block">
+                                                        {trainer.name || 'Unknown Trainer'}
                                                     </span>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Chip
-                                                        size="sm"
-                                                        className="bg-green-50 text-green-700 border border-green-200 font-semibold"
-                                                        startContent={<Shield className="size-3" />}
-                                                    >
-                                                        Active
-                                                    </Chip>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <span className="text-slate-500 text-xs flex items-center gap-1">
-                                                        <Calendar className="size-3 text-slate-400" />
-                                                        {formatDate(trainer.createdAt)}
+                                                    <span className="text-xs text-blue-600 flex items-center gap-1">
+                                                        <Crown className="size-3" />
+                                                        Trainer
                                                     </span>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="flat"
-                                                        onClick={() => handleDemoteClick(trainer)}
-                                                        className="bg-red-50 text-red-600 hover:bg-red-100 font-semibold min-w-[120px]"
-                                                        startContent={<UserMinus className="size-3.5" />}
-                                                    >
-                                                        Demote to User
-                                                    </Button>
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        ))}
-                                    </Table.Body>
-                                </Table.Content>
-                            </Table.ScrollContainer>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="text-slate-600 text-sm flex items-center gap-1">
+                                                <Mail className="size-3.5 text-slate-400" />
+                                                {trainer.email || 'No email'}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                size="sm"
+                                                className="bg-green-50 text-green-700 border border-green-200 font-semibold"
+                                                startContent={<Shield className="size-3" />}
+                                            >
+                                                Active
+                                            </Chip>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="text-slate-500 text-xs flex items-center gap-1">
+                                                <Calendar className="size-3 text-slate-400" />
+                                                {formatDate(trainer.createdAt)}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                size="sm"
+                                                variant="flat"
+                                                onClick={() => handleDemoteClick(trainer)}
+                                                className="bg-red-50 text-red-600 hover:bg-red-100 font-semibold min-w-[120px]"
+                                                startContent={<UserMinus className="size-3.5" />}
+                                            >
+                                                Demote to User
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
                         </Table>
                     </div>
                 </Card>
             )}
 
-            {/* Confirmation Modal */}
             <Modal isOpen={showConfirmModal} onClose={() => setShowConfirmModal(false)}>
                 <Modal.Backdrop className="bg-red-950/20 backdrop-blur-sm">
                     <Modal.Container>

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, Chip, Button, Spinner, Input, Pagination
+    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Chip, Button, Spinner, Input, Pagination
 } from "@heroui/react";
 import {
     DollarSign, Calendar, User, Mail, RefreshCw,
@@ -114,7 +115,6 @@ export default function TransactionsPage() {
 
     const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
 
-    // Calculate stats
     const totalRevenue = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
     const uniqueUsers = new Set(transactions.map(t => t.userEmail)).size;
     const averageAmount = transactions.length > 0 ? totalRevenue / transactions.length : 0;
@@ -130,7 +130,6 @@ export default function TransactionsPage() {
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
@@ -156,7 +155,6 @@ export default function TransactionsPage() {
                 </div>
             </div>
 
-            {/* Search Bar */}
             <div className="mb-6">
                 <Input
                     placeholder="Search by email, name, transaction ID, or class..."
@@ -170,7 +168,6 @@ export default function TransactionsPage() {
                 />
             </div>
 
-            {/* Stats Summary */}
             {transactions.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div className="bg-blue-50/30 border border-blue-100 rounded-xl p-4">
@@ -217,65 +214,60 @@ export default function TransactionsPage() {
                     <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                         <div className="overflow-x-auto">
                             <Table aria-label="Transactions table">
-                                <Table.ScrollContainer>
-                                    <Table.Content className="min-w-[900px]">
-                                        <Table.Header>
-                                            <Table.Column>USER</Table.Column>
-                                            <Table.Column>CLASS</Table.Column>
-                                            <Table.Column>AMOUNT</Table.Column>
-                                            <Table.Column>DATE</Table.Column>
-                                            <Table.Column>STATUS</Table.Column>
-                                            <Table.Column>TRANSACTION ID</Table.Column>
-                                        </Table.Header>
-                                        <Table.Body>
-                                            {paginatedTransactions.map((transaction) => (
-                                                <Table.Row key={transaction._id} className="hover:bg-slate-50/50 transition">
-                                                    <Table.Cell>
-                                                        <div className="flex flex-col">
-                                                            <span className="font-semibold text-slate-900">
-                                                                {transaction.userName || 'Unknown User'}
-                                                            </span>
-                                                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                                <Mail className="size-3" />
-                                                                {transaction.userEmail || 'No email'}
-                                                            </span>
-                                                        </div>
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        <span className="text-sm text-slate-700">
-                                                            {transaction.className || 'Unknown Class'}
-                                                        </span>
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        <span className="font-bold text-slate-900 flex items-center gap-1">
-                                                            <DollarSign className="size-3.5 text-slate-400" />
-                                                            {formatCurrency(transaction.amount)}
-                                                        </span>
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        <span className="text-sm text-slate-600 flex items-center gap-1">
-                                                            <Calendar className="size-3.5 text-slate-400" />
-                                                            {formatDate(transaction.date)}
-                                                        </span>
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        {getStatusChip(transaction.status || 'completed')}
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        <span className="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                                                            {transaction.transactionId?.slice(0, 12)}...
-                                                        </span>
-                                                    </Table.Cell>
-                                                </Table.Row>
-                                            ))}
-                                        </Table.Body>
-                                    </Table.Content>
-                                </Table.ScrollContainer>
+                                <TableHeader>
+                                    <TableColumn isRowHeader>USER</TableColumn>
+                                    <TableColumn>CLASS</TableColumn>
+                                    <TableColumn>AMOUNT</TableColumn>
+                                    <TableColumn>DATE</TableColumn>
+                                    <TableColumn>STATUS</TableColumn>
+                                    <TableColumn>TRANSACTION ID</TableColumn>
+                                </TableHeader>
+                                <TableBody>
+                                    {paginatedTransactions.map((transaction) => (
+                                        <TableRow key={transaction._id} className="hover:bg-slate-50/50 transition">
+                                            <TableCell>
+                                                <div className="flex flex-col">
+                                                    <span className="font-semibold text-slate-900">
+                                                        {transaction.userName || 'Unknown User'}
+                                                    </span>
+                                                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                                                        <Mail className="size-3" />
+                                                        {transaction.userEmail || 'No email'}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className="text-sm text-slate-700">
+                                                    {transaction.className || 'Unknown Class'}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className="font-bold text-slate-900 flex items-center gap-1">
+                                                    <DollarSign className="size-3.5 text-slate-400" />
+                                                    {formatCurrency(transaction.amount)}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className="text-sm text-slate-600 flex items-center gap-1">
+                                                    <Calendar className="size-3.5 text-slate-400" />
+                                                    {formatDate(transaction.date)}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>
+                                                {getStatusChip(transaction.status || 'completed')}
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className="text-xs font-mono text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                                    {transaction.transactionId?.slice(0, 12)}...
+                                                </span>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
                             </Table>
                         </div>
                     </Card>
 
-                    {/* Pagination */}
                     {totalPages > 1 && (
                         <div className="flex justify-center mt-6">
                             <Pagination

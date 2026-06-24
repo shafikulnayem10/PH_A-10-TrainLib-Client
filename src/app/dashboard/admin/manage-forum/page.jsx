@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, Chip, Button, Spinner, Modal, Avatar
+    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Chip, Button, Spinner, Modal, Avatar
 } from "@heroui/react";
 import {
     MessageSquare, Trash2, Eye, User, Mail,
@@ -188,98 +189,94 @@ export default function ManageForumPage() {
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <Table aria-label="Manage forum posts table">
-                            <Table.ScrollContainer>
-                                <Table.Content className="min-w-[900px]">
-                                    <Table.Header>
-                                        <Table.Column>POST</Table.Column>
-                                        <Table.Column>AUTHOR</Table.Column>
-                                        <Table.Column>LIKES</Table.Column>
-                                        <Table.Column>CREATED</Table.Column>
-                                        <Table.Column align="center">ACTIONS</Table.Column>
-                                    </Table.Header>
-                                    <Table.Body>
-                                        {posts.map((post) => (
-                                            <Table.Row key={post._id} className="hover:bg-slate-50/50 transition">
-                                                <Table.Cell>
-                                                    <div className="flex items-center gap-3">
-                                                        {post.image && (
-                                                            <img
-                                                                src={post.image}
-                                                                alt={post.title}
-                                                                className="w-10 h-10 rounded-lg object-cover border border-slate-200 flex-shrink-0"
-                                                                onError={(e) => {
-                                                                    e.target.src = '/placeholder.jpg';
-                                                                }}
-                                                            />
-                                                        )}
-                                                        <div>
-                                                            <span className="font-semibold text-slate-900 block line-clamp-1">
-                                                                {post.title || 'Untitled Post'}
-                                                            </span>
-                                                            <span className="text-xs text-slate-500 line-clamp-1">
-                                                                {post.description?.slice(0, 60) || 'No description'}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <div className="flex flex-col">
-                                                        <div className="flex items-center gap-1.5">
-                                                            <span className="font-semibold text-slate-900 text-sm">
-                                                                {post.authorName || 'Unknown User'}
-                                                            </span>
-                                                            {getRoleBadge(post.authorRole)}
-                                                        </div>
-                                                        <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                            <Mail className="size-3" />
-                                                            {post.authorEmail || 'No email'}
-                                                        </span>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Chip
-                                                        size="sm"
-                                                        className="bg-rose-50 text-rose-700 border border-rose-200 font-semibold"
-                                                        startContent={<span className="text-rose-500">❤</span>}
-                                                    >
-                                                        {post.likes?.length || 0}
-                                                    </Chip>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <span className="text-sm text-slate-600 flex items-center gap-1">
-                                                        <Calendar className="size-3.5 text-slate-400" />
-                                                        {formatDate(post.createdAt)}
+                            <TableHeader>
+                                <TableColumn isRowHeader>POST</TableColumn>
+                                <TableColumn>AUTHOR</TableColumn>
+                                <TableColumn>LIKES</TableColumn>
+                                <TableColumn>CREATED</TableColumn>
+                                <TableColumn align="center">ACTIONS</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {posts.map((post) => (
+                                    <TableRow key={post._id} className="hover:bg-slate-50/50 transition">
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                {post.image && (
+                                                    <img
+                                                        src={post.image}
+                                                        alt={post.title}
+                                                        className="w-10 h-10 rounded-lg object-cover border border-slate-200 flex-shrink-0"
+                                                        onError={(e) => {
+                                                            e.target.src = '/placeholder.jpg';
+                                                        }}
+                                                    />
+                                                )}
+                                                <div>
+                                                    <span className="font-semibold text-slate-900 block line-clamp-1">
+                                                        {post.title || 'Untitled Post'}
                                                     </span>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <div className="flex items-center justify-center gap-1.5">
-                                                        <Link href={`/forum/${post._id}`} target="_blank">
-                                                            <Button
-                                                                size="sm"
-                                                                variant="flat"
-                                                                className="bg-blue-50 text-blue-600 hover:bg-blue-100 min-w-[70px] h-8 text-xs font-semibold"
-                                                                startContent={<Eye className="size-3" />}
-                                                            >
-                                                                View
-                                                            </Button>
-                                                        </Link>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="flat"
-                                                            onClick={() => handleDeleteClick(post)}
-                                                            className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[70px] h-8 text-xs font-semibold"
-                                                            startContent={<Trash2 className="size-3" />}
-                                                            disabled={processing}
-                                                        >
-                                                            Delete
-                                                        </Button>
-                                                    </div>
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        ))}
-                                    </Table.Body>
-                                </Table.Content>
-                            </Table.ScrollContainer>
+                                                    <span className="text-xs text-slate-500 line-clamp-1">
+                                                        {post.description?.slice(0, 60) || 'No description'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="font-semibold text-slate-900 text-sm">
+                                                        {post.authorName || 'Unknown User'}
+                                                    </span>
+                                                    {getRoleBadge(post.authorRole)}
+                                                </div>
+                                                <span className="text-xs text-slate-500 flex items-center gap-1">
+                                                    <Mail className="size-3" />
+                                                    {post.authorEmail || 'No email'}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                size="sm"
+                                                className="bg-rose-50 text-rose-700 border border-rose-200 font-semibold"
+                                                startContent={<span className="text-rose-500">❤</span>}
+                                            >
+                                                {post.likes?.length || 0}
+                                            </Chip>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="text-sm text-slate-600 flex items-center gap-1">
+                                                <Calendar className="size-3.5 text-slate-400" />
+                                                {formatDate(post.createdAt)}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center gap-1.5">
+                                                <Link href={`/forum/${post._id}`} target="_blank">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="flat"
+                                                        className="bg-blue-50 text-blue-600 hover:bg-blue-100 min-w-[70px] h-8 text-xs font-semibold"
+                                                        startContent={<Eye className="size-3" />}
+                                                    >
+                                                        View
+                                                    </Button>
+                                                </Link>
+                                                <Button
+                                                    size="sm"
+                                                    variant="flat"
+                                                    onClick={() => handleDeleteClick(post)}
+                                                    className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[70px] h-8 text-xs font-semibold"
+                                                    startContent={<Trash2 className="size-3" />}
+                                                    disabled={processing}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
                         </Table>
                     </div>
                 </Card>

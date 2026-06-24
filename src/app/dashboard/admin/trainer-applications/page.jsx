@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-    Card, Table, Chip, Button, Spinner, Modal,  Input, TextArea
+    Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Chip, Button, Spinner, Modal, Input, TextArea
 } from "@heroui/react";
 import {
     Users, Eye, CheckCircle, XCircle, Calendar,
@@ -199,71 +200,66 @@ export default function TrainerApplicationsPage() {
                 <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <Table aria-label="Trainer applications table">
-                            <Table.ScrollContainer>
-                                <Table.Content className="min-w-[800px]">
-                                    <Table.Header>
-                                        <Table.Column>APPLICANT</Table.Column>
-                                        <Table.Column>SPECIALTY</Table.Column>
-                                        <Table.Column>EXPERIENCE</Table.Column>
-                                        <Table.Column>APPLIED ON</Table.Column>
-                                        <Table.Column align="center">ACTIONS</Table.Column>
-                                    </Table.Header>
-                                    <Table.Body>
-                                        {applications.map((app) => (
-                                            <Table.Row key={app._id} className="hover:bg-slate-50/50 transition">
-                                                <Table.Cell>
-                                                    <div className="flex items-center gap-3">
-                                                       
-                                                        <div>
-                                                            <span className="font-semibold text-slate-900 block">
-                                                                {app.userName || 'Unknown User'}
-                                                            </span>
-                                                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                                <Mail className="size-3" />
-                                                                {app.userEmail || 'No email'}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Chip
-                                                        size="sm"
-                                                        className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
-                                                    >
-                                                        {app.specialty || 'Not specified'}
-                                                    </Chip>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <span className="font-semibold text-slate-900">
-                                                        {app.experience || 0} years
+                            <TableHeader>
+                                <TableColumn isRowHeader>APPLICANT</TableColumn>
+                                <TableColumn>SPECIALTY</TableColumn>
+                                <TableColumn>EXPERIENCE</TableColumn>
+                                <TableColumn>APPLIED ON</TableColumn>
+                                <TableColumn align="center">ACTIONS</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {applications.map((app) => (
+                                    <TableRow key={app._id} className="hover:bg-slate-50/50 transition">
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <div>
+                                                    <span className="font-semibold text-slate-900 block">
+                                                        {app.userName || 'Unknown User'}
                                                     </span>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <div className="flex flex-col">
-                                                        <span className="text-sm text-slate-600">
-                                                            {formatDate(app.appliedAt)}
-                                                        </span>
-                                                        <span className="text-xs text-slate-400">
-                                                            {formatTime(app.appliedAt)}
-                                                        </span>
-                                                    </div>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Button
-                                                        size="sm"
-                                                        onClick={() => handleViewDetails(app)}
-                                                        className="bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold"
-                                                        startContent={<Eye className="size-3.5" />}
-                                                        disabled={processing}
-                                                    >
-                                                        Details
-                                                    </Button>
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        ))}
-                                    </Table.Body>
-                                </Table.Content>
-                            </Table.ScrollContainer>
+                                                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                                                        <Mail className="size-3" />
+                                                        {app.userEmail || 'No email'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                size="sm"
+                                                className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
+                                            >
+                                                {app.specialty || 'Not specified'}
+                                            </Chip>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="font-semibold text-slate-900">
+                                                {app.experience || 0} years
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-slate-600">
+                                                    {formatDate(app.appliedAt)}
+                                                </span>
+                                                <span className="text-xs text-slate-400">
+                                                    {formatTime(app.appliedAt)}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                size="sm"
+                                                onClick={() => handleViewDetails(app)}
+                                                className="bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold"
+                                                startContent={<Eye className="size-3.5" />}
+                                                disabled={processing}
+                                            >
+                                                Details
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
                         </Table>
                     </div>
                 </Card>
@@ -307,7 +303,6 @@ export default function TrainerApplicationsPage() {
                                 {selectedApplication && (
                                     <>
                                         <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                                          
                                             <div>
                                                 <h3 className="font-bold text-slate-900">
                                                     {selectedApplication.userName || 'Unknown User'}
