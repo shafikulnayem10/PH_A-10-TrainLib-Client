@@ -203,7 +203,7 @@ export default function TransactionsPage() {
                             {searchTerm ? 'No matching transactions found' : 'No transactions available'}
                         </h2>
                         <p className="text-slate-500 text-sm max-w-md">
-                            {searchTerm 
+                            {searchTerm
                                 ? 'Try adjusting your search terms or filters.'
                                 : 'Transactions will appear here once payments are processed.'}
                         </p>
@@ -222,8 +222,12 @@ export default function TransactionsPage() {
                                     <TableColumn>STATUS</TableColumn>
                                     <TableColumn>TRANSACTION ID</TableColumn>
                                 </TableHeader>
-                                <TableBody>
-                                    {paginatedTransactions.map((transaction) => (
+                             
+                                <TableBody
+                                    items={paginatedTransactions}
+                                    emptyContent="No transactions found."
+                                >
+                                    {(transaction) => (
                                         <TableRow key={transaction._id} className="hover:bg-slate-50/50 transition">
                                             <TableCell>
                                                 <div className="flex flex-col">
@@ -262,7 +266,7 @@ export default function TransactionsPage() {
                                                 </span>
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    )}
                                 </TableBody>
                             </Table>
                         </div>

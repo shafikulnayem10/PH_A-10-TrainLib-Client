@@ -23,7 +23,7 @@ export default function TrainerApplicationsPage() {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [feedback, setFeedback] = useState('');
     const [processing, setProcessing] = useState(false);
-    const [actionType, setActionType] = useState(''); 
+    const [actionType, setActionType] = useState('');
 
     const fetchApplications = async () => {
         setLoading(true);
@@ -59,7 +59,7 @@ export default function TrainerApplicationsPage() {
 
         const applicationId = selectedApplication._id;
         const previousApplications = applications;
-        setApplications(prevApps => 
+        setApplications(prevApps =>
             prevApps.filter(app => app._id !== applicationId)
         );
 
@@ -99,7 +99,7 @@ export default function TrainerApplicationsPage() {
 
         const applicationId = selectedApplication._id;
         const previousApplications = applications;
-        setApplications(prevApps => 
+        setApplications(prevApps =>
             prevApps.filter(app => app._id !== applicationId)
         );
 
@@ -207,8 +207,12 @@ export default function TrainerApplicationsPage() {
                                 <TableColumn>APPLIED ON</TableColumn>
                                 <TableColumn align="center">ACTIONS</TableColumn>
                             </TableHeader>
-                            <TableBody>
-                                {applications.map((app) => (
+                          
+                            <TableBody
+                                items={applications}
+                                emptyContent="No applications found."
+                            >
+                                {(app) => (
                                     <TableRow key={app._id} className="hover:bg-slate-50/50 transition">
                                         <TableCell>
                                             <div className="flex items-center gap-3">
@@ -258,7 +262,7 @@ export default function TrainerApplicationsPage() {
                                             </Button>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
                         </Table>
                     </div>
@@ -397,7 +401,7 @@ export default function TrainerApplicationsPage() {
                                 >
                                     Cancel
                                 </Button>
-                                
+
                                 {actionType === 'approve' ? (
                                     <Button
                                         size="md"

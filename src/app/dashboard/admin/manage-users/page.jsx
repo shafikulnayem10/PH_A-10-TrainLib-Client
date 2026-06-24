@@ -1,21 +1,21 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { 
+import {
     Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
     Chip, Button, Spinner, Modal, Avatar, Input
 } from "@heroui/react";
-import { 
-    Users, Shield, User, Mail, Calendar, 
-    Search, RefreshCw, Ban, CheckCircle, 
-    Crown, AlertTriangle, X, UserCog, 
+import {
+    Users, Shield, User, Mail, Calendar,
+    Search, RefreshCw, Ban, CheckCircle,
+    Crown, AlertTriangle, X, UserCog,
     ShieldCheck, UserX, UserCheck
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { 
-    fetchAdminUsersAction, 
-    updateUserStatusAction, 
-    makeUserAdminAction 
+import {
+    fetchAdminUsersAction,
+    updateUserStatusAction,
+    makeUserAdminAction
 } from "@/lib/actions/admin";
 
 export default function ManageUsersPage() {
@@ -58,7 +58,7 @@ export default function ManageUsersPage() {
         setProcessing(true);
 
         const userId = selectedUser?.id || selectedUser?._id;
-        
+
         if (!userId) {
             toast.error("User ID not found");
             setProcessing(false);
@@ -66,27 +66,27 @@ export default function ManageUsersPage() {
         }
 
         const previousUsers = users;
-        
+
         if (actionType === 'block') {
             setUsers(prevUsers =>
-                prevUsers.map(u => 
-                    (u.id === userId || u._id === userId) 
+                prevUsers.map(u =>
+                    (u.id === userId || u._id === userId)
                         ? { ...u, softBanned: true }
                         : u
                 )
             );
         } else if (actionType === 'unblock') {
             setUsers(prevUsers =>
-                prevUsers.map(u => 
-                    (u.id === userId || u._id === userId) 
+                prevUsers.map(u =>
+                    (u.id === userId || u._id === userId)
                         ? { ...u, softBanned: false }
                         : u
                 )
             );
         } else if (actionType === 'make-admin') {
             setUsers(prevUsers =>
-                prevUsers.map(u => 
-                    (u.id === userId || u._id === userId) 
+                prevUsers.map(u =>
+                    (u.id === userId || u._id === userId)
                         ? { ...u, role: 'admin' }
                         : u
                 )
@@ -122,10 +122,10 @@ export default function ManageUsersPage() {
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
     };
 
@@ -136,8 +136,8 @@ export default function ManageUsersPage() {
     const getStatusChip = (user) => {
         if (isUserSoftBlocked(user)) {
             return (
-                <Chip 
-                    size="sm" 
+                <Chip
+                    size="sm"
                     className="bg-red-50 text-red-700 border border-red-200 font-semibold"
                     startContent={<Ban className="size-3" />}
                 >
@@ -146,8 +146,8 @@ export default function ManageUsersPage() {
             );
         }
         return (
-            <Chip 
-                size="sm" 
+            <Chip
+                size="sm"
                 className="bg-green-50 text-green-700 border border-green-200 font-semibold"
                 startContent={<CheckCircle className="size-3" />}
             >
@@ -159,8 +159,8 @@ export default function ManageUsersPage() {
     const getRoleChip = (role) => {
         if (role === 'admin') {
             return (
-                <Chip 
-                    size="sm" 
+                <Chip
+                    size="sm"
                     className="bg-purple-50 text-purple-700 border border-purple-200 font-semibold"
                     startContent={<Crown className="size-3" />}
                 >
@@ -170,8 +170,8 @@ export default function ManageUsersPage() {
         }
         if (role === 'trainer') {
             return (
-                <Chip 
-                    size="sm" 
+                <Chip
+                    size="sm"
                     className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
                     startContent={<UserCog className="size-3" />}
                 >
@@ -180,8 +180,8 @@ export default function ManageUsersPage() {
             );
         }
         return (
-            <Chip 
-                size="sm" 
+            <Chip
+                size="sm"
                 className="bg-gray-50 text-gray-600 border border-gray-200 font-semibold"
                 startContent={<User className="size-3" />}
             >
@@ -190,7 +190,7 @@ export default function ManageUsersPage() {
         );
     };
 
-    const filteredUsers = users.filter(user => 
+    const filteredUsers = users.filter(user =>
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -219,10 +219,10 @@ export default function ManageUsersPage() {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button 
-                        isIconOnly 
-                        variant="light" 
-                        onClick={fetchUsers} 
+                    <Button
+                        isIconOnly
+                        variant="light"
+                        onClick={fetchUsers}
                         className="text-blue-600 hover:bg-blue-50"
                         disabled={loading}
                     >
@@ -255,8 +255,12 @@ export default function ManageUsersPage() {
                             <TableColumn>JOINED</TableColumn>
                             <TableColumn align="center">ACTIONS</TableColumn>
                         </TableHeader>
-                        <TableBody>
-                            {filteredUsers.map((user) => (
+                       
+                        <TableBody
+                            items={filteredUsers}
+                            emptyContent={searchTerm ? "No users match your search." : "No users found."}
+                        >
+                            {(user) => (
                                 <TableRow key={user.id || user._id} className="hover:bg-slate-50/50 transition">
                                     <TableCell>
                                         <div className="flex items-center gap-3">
@@ -297,7 +301,7 @@ export default function ManageUsersPage() {
                                                     Make Admin
                                                 </Button>
                                             )}
-                                            
+
                                             {isUserSoftBlocked(user) ? (
                                                 <Button
                                                     size="sm"
@@ -326,7 +330,7 @@ export default function ManageUsersPage() {
                                         </div>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
                 </div>
@@ -388,15 +392,15 @@ export default function ManageUsersPage() {
                                     <h3 className="text-lg font-bold text-slate-900">Are you sure?</h3>
                                     <p className="text-slate-600 text-sm leading-relaxed">
                                         {actionType === 'block' && (
-                                            <>You are about to block <span className="font-semibold text-slate-900">{selectedUser?.name}</span>. 
+                                            <>You are about to block <span className="font-semibold text-slate-900">{selectedUser?.name}</span>.
                                             They will still be able to browse but cannot book classes, apply as trainer, or post comments.</>
                                         )}
                                         {actionType === 'unblock' && (
-                                            <>You are about to unblock <span className="font-semibold text-slate-900">{selectedUser?.name}</span>. 
+                                            <>You are about to unblock <span className="font-semibold text-slate-900">{selectedUser?.name}</span>.
                                             They will regain full access to all platform features.</>
                                         )}
                                         {actionType === 'make-admin' && (
-                                            <>You are about to promote <span className="font-semibold text-slate-900">{selectedUser?.name}</span> to Admin. 
+                                            <>You are about to promote <span className="font-semibold text-slate-900">{selectedUser?.name}</span> to Admin.
                                             They will have full administrative access to the platform.</>
                                         )}
                                     </p>
@@ -409,18 +413,18 @@ export default function ManageUsersPage() {
                                 </div>
                             </Modal.Body>
                             <Modal.Footer className="border-t border-slate-100 pt-4 flex gap-3">
-                                <Button 
-                                    size="md" 
-                                    variant="light" 
-                                    className="text-slate-700 font-bold rounded-xl flex-1 hover:bg-slate-50 transition" 
+                                <Button
+                                    size="md"
+                                    variant="light"
+                                    className="text-slate-700 font-bold rounded-xl flex-1 hover:bg-slate-50 transition"
                                     onClick={() => setShowConfirmModal(false)}
                                     disabled={processing}
                                 >
                                     <X className="size-4 mr-1" />
                                     Cancel
                                 </Button>
-                                <Button 
-                                    size="md" 
+                                <Button
+                                    size="md"
                                     isLoading={processing}
                                     className={`font-bold rounded-xl flex-1 transition ${
                                         actionType === 'block' ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-200' :

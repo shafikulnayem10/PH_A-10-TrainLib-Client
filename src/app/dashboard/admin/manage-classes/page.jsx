@@ -60,14 +60,14 @@ export default function ManageClassesPage() {
         let newStatus = '';
 
         if (actionType === 'delete') {
-            setClasses(prevClasses => 
+            setClasses(prevClasses =>
                 prevClasses.filter(cls => cls._id !== classId)
             );
         } else {
             newStatus = actionType === 'approve' || actionType === 'reapprove' ? 'approved' : 'rejected';
-            setClasses(prevClasses => 
-                prevClasses.map(cls => 
-                    cls._id === classId 
+            setClasses(prevClasses =>
+                prevClasses.map(cls =>
+                    cls._id === classId
                         ? { ...cls, status: newStatus }
                         : cls
                 )
@@ -172,31 +172,27 @@ export default function ManageClassesPage() {
             );
         } else if (classData.status === 'approved') {
             return (
-                <>
-                    <Button
-                        size="sm"
-                        onClick={() => handleAction(classData, 'reject')}
-                        className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
-                        startContent={<XCircle className="size-3" />}
-                        disabled={processing}
-                    >
-                        Reject
-                    </Button>
-                </>
+                <Button
+                    size="sm"
+                    onClick={() => handleAction(classData, 'reject')}
+                    className="bg-red-50 text-red-600 hover:bg-red-100 min-w-[80px] h-8 text-xs font-semibold"
+                    startContent={<XCircle className="size-3" />}
+                    disabled={processing}
+                >
+                    Reject
+                </Button>
             );
         } else if (classData.status === 'rejected') {
             return (
-                <>
-                    <Button
-                        size="sm"
-                        onClick={() => handleAction(classData, 'reapprove')}
-                        className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
-                        startContent={<RotateCcw className="size-3" />}
-                        disabled={processing}
-                    >
-                        Approve
-                    </Button>
-                </>
+                <Button
+                    size="sm"
+                    onClick={() => handleAction(classData, 'reapprove')}
+                    className="bg-green-50 text-green-600 hover:bg-green-100 min-w-[80px] h-8 text-xs font-semibold"
+                    startContent={<RotateCcw className="size-3" />}
+                    disabled={processing}
+                >
+                    Approve
+                </Button>
             );
         }
         return null;
@@ -221,8 +217,8 @@ export default function ManageClassesPage() {
                     <div>
                         <div className="flex items-center gap-4">
                             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Manage Classes</h1>
-                            <Chip 
-                                size="sm" 
+                            <Chip
+                                size="sm"
                                 className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
                             >
                                 Total: {classes.length}
@@ -271,8 +267,12 @@ export default function ManageClassesPage() {
                                 <TableColumn>STATUS</TableColumn>
                                 <TableColumn align="center">ACTIONS</TableColumn>
                             </TableHeader>
-                            <TableBody>
-                                {classes.map((classData) => (
+                            {/* ✅ FIX: items prop + render function */}
+                            <TableBody
+                                items={classes}
+                                emptyContent="No classes found."
+                            >
+                                {(classData) => (
                                     <TableRow key={classData._id} className="hover:bg-slate-50/50 transition">
                                         <TableCell>
                                             <div className="flex items-center gap-3">
@@ -341,7 +341,7 @@ export default function ManageClassesPage() {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
                         </Table>
                     </div>
@@ -402,15 +402,15 @@ export default function ManageClassesPage() {
                                     <h3 className="text-lg font-bold text-slate-900">Are you sure?</h3>
                                     <p className="text-slate-600 text-sm leading-relaxed">
                                         {actionType === 'delete' && (
-                                            <>You are about to permanently delete the class <span className="font-semibold text-slate-900">"{selectedClass?.className}"</span>. 
+                                            <>You are about to permanently delete the class <span className="font-semibold text-slate-900">"{selectedClass?.className}"</span>.
                                             This action cannot be undone.</>
                                         )}
                                         {(actionType === 'approve' || actionType === 'reapprove') && (
-                                            <>You are about to approve the class <span className="font-semibold text-slate-900">"{selectedClass?.className}"</span>. 
+                                            <>You are about to approve the class <span className="font-semibold text-slate-900">"{selectedClass?.className}"</span>.
                                             It will become visible to all users.</>
                                         )}
                                         {actionType === 'reject' && (
-                                            <>You are about to reject the class <span className="font-semibold text-slate-900">"{selectedClass?.className}"</span>. 
+                                            <>You are about to reject the class <span className="font-semibold text-slate-900">"{selectedClass?.className}"</span>.
                                             The trainer will be notified.</>
                                         )}
                                     </p>

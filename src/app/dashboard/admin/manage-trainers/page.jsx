@@ -139,8 +139,12 @@ export default function ManageTrainersPage() {
                                 <TableColumn>JOINED</TableColumn>
                                 <TableColumn align="center">ACTIONS</TableColumn>
                             </TableHeader>
-                            <TableBody>
-                                {trainers.map((trainer) => (
+                          
+                            <TableBody
+                                items={trainers}
+                                emptyContent="No trainers found."
+                            >
+                                {(trainer) => (
                                     <TableRow key={trainer._id} className="hover:bg-slate-50/50 transition">
                                         <TableCell>
                                             <div className="flex items-center gap-3">
@@ -188,7 +192,7 @@ export default function ManageTrainersPage() {
                                             </Button>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
                         </Table>
                     </div>

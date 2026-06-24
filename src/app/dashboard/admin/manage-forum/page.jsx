@@ -55,7 +55,7 @@ export default function ManageForumPage() {
 
         const postId = selectedPost._id;
         const previousPosts = posts;
-        setPosts(prevPosts => 
+        setPosts(prevPosts =>
             prevPosts.filter(post => post._id !== postId)
         );
 
@@ -196,8 +196,12 @@ export default function ManageForumPage() {
                                 <TableColumn>CREATED</TableColumn>
                                 <TableColumn align="center">ACTIONS</TableColumn>
                             </TableHeader>
-                            <TableBody>
-                                {posts.map((post) => (
+                           
+                            <TableBody
+                                items={posts}
+                                emptyContent="No forum posts found."
+                            >
+                                {(post) => (
                                     <TableRow key={post._id} className="hover:bg-slate-50/50 transition">
                                         <TableCell>
                                             <div className="flex items-center gap-3">
@@ -275,7 +279,7 @@ export default function ManageForumPage() {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )}
                             </TableBody>
                         </Table>
                     </div>
