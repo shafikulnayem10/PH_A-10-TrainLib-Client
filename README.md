@@ -96,7 +96,7 @@ The platform aims to make fitness accessible, engaging, and professionally manag
 ### 1. Client Setup
 ```bash
 # Clone the client repository
-git clone <your-client-repo-url>
+git clone https://github.com/shafikulnayem10/PH_A-10-TrainLib-Client.git
 cd trainlib-client
 
 # Install required packages
@@ -116,7 +116,7 @@ npm run dev
 
 ```bash
 # Clone the server repository
-git clone [https://github.com/yourusername/trainlib-server.git](https://github.com/yourusername/trainlib-server.git)
+git clone https://github.com/shafikulnayem10/PH_A-10-TrainLib-Server.git
 cd trainlib-server
 
 # Install dependencies
