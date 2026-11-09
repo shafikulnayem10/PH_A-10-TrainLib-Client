@@ -91,6 +91,17 @@ The platform aims to make fitness accessible, engaging, and professionally manag
 
 ---
 
+## 🐞 Challenges & Bugs Faced
+
+### Restricting mutations for soft-blocked users
+
+- **The problem:** Admins can block a user, but a blocked user is not fully locked out. They should still be able to browse classes and read forum content, while being stopped from doing anything that changes data (booking classes, adding favorites, commenting, submitting trainer applications, etc.). Getting this balance right was tricky: a full block would kick the user out of the site, while no block would let them keep performing actions.
+- **Where it occurred:** Role-based access and user-status handling across the frontend UI and the backend API routes.
+- **The fix:** A dedicated `softblock` field was added to the user document in the MongoDB Atlas database. When an admin suspends a user, this flag is set instead of removing the account or ending their session, so the user can keep browsing while mutation actions are restricted based on the flag.
+- **The takeaway:** Hiding buttons on the frontend is not enough on its own. Mutation routes must also reject blocked users on the server, while read-only routes stay open. This is what the **Soft Block Mechanism** in the Security Features section is built on.
+
+---
+
 ## 🚀 Installation & Setup
 
 ### Prerequisites
